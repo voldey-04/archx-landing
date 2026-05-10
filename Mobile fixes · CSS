@@ -1,0 +1,921 @@
+/* ═══════════════════════════════════════════════════════════════
+   ARCH X — MOBILE RESPONSIVENESS PATCH
+   Strictly mobile-only. Zero desktop changes.
+   Drop this AFTER your existing <style> block.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────
+   1. PERFORMANCE — kill fixed bg-attachment on
+      ALL mobile (iOS scroll-jank / repaint fix)
+───────────────────────────────────────────────*/
+@media (max-width: 1024px) {
+  #about,
+  #services,
+  #journal,
+  .stats-section,
+  .footer-top,
+  .cta-section .cta-parallax img,
+  .stats-parallax-bg img {
+    background-attachment: scroll !important;
+  }
+
+  /* Parallax imgs: disable will-change & force-static on mobile */
+  .cta-parallax img,
+  .stats-parallax-bg img {
+    will-change: auto !important;
+    transform: none !important;
+  }
+
+  /* Disable heavy grain overlay on mobile (compositing cost) */
+  body::after {
+    display: none;
+  }
+
+  /* Reduce transition durations — snappier on low-end devices */
+  :root {
+    --ease: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .cat-card,
+  .svc-card,
+  .testi-card,
+  .c-method,
+  .gp-card,
+  .blog-card {
+    transition-duration: 0.25s !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   2. HERO — text & button fixes
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .hero {
+    align-items: flex-end;
+    padding-bottom: 90px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .hero-sub {
+    font-size: 0.92rem;
+    margin-bottom: 32px;
+    max-width: 100%;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .hero-btns .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    margin-bottom: 18px;
+  }
+
+  .hero-scroll {
+    bottom: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   3. NAVBAR — hamburger & mobile menu
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .navbar {
+    padding: 18px 0;
+  }
+
+  .navbar.scrolled {
+    padding: 12px 0;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    gap: 8px;
+  }
+
+  .logo-img {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Mobile nav panel — full-height slide-in from right */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    left: auto;
+    width: min(75vw, 300px);
+    height: 100dvh;            /* dvh avoids iOS toolbar clipping */
+    background: rgba(6, 6, 6, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-left: 1px solid rgba(201, 169, 110, 0.12);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 80px 30px 40px;
+    transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow-y: auto;
+    z-index: 490;
+  }
+
+  .nav-links.open {
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+    letter-spacing: 2.5px;
+    color: rgba(255, 255, 255, 0.75);
+    padding: 8px 0;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--gold);
+  }
+
+  /* Overlay behind nav on open */
+  .nav-links::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    right: min(75vw, 300px);
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .nav-links.open::before {
+    opacity: 1;
+  }
+
+  .hamburger {
+    display: flex;
+    z-index: 510; /* above nav overlay */
+    padding: 8px;
+    cursor: pointer;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   4. SECTION SPACING — tighter on mobile
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .sp {
+    padding: 70px 0;
+  }
+
+  .container {
+    width: 92%;
+  }
+
+  .s-title {
+    font-size: clamp(2rem, 7.5vw, 2.8rem);
+    line-height: 1.1;
+  }
+
+  .s-label {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sp {
+    padding: 55px 0;
+  }
+
+  .container {
+    width: 94%;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   5. ABOUT SECTION
+───────────────────────────────────────────────*/
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .about-img-wrap img {
+    height: 320px;
+  }
+
+  /* Badge clipping fix — pull inside the image boundary */
+  .badge-glass {
+    bottom: 12px;
+    right: 12px;
+    padding: 18px 20px;
+    gap: 12px;
+  }
+
+  .badge-glass .num {
+    font-size: 2.4rem;
+  }
+
+  .badge-glass p {
+    font-size: 0.68rem;
+  }
+
+  /* Offset border frame: stay inside on mobile */
+  .about-img-wrap::before {
+    transform: translate(8px, 8px);
+  }
+  .about-img-wrap:hover::before {
+    transform: translate(10px, 10px);
+  }
+
+  .founder-quote {
+    font-size: 1.05rem;
+    padding: 14px 20px;
+    margin: 1.5rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-img-wrap img {
+    height: 260px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   6. SERVICES GRID
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+
+  .svc-card {
+    padding: 36px 26px;
+  }
+
+  /* Disable hover lift on touch — avoids stuck states */
+  .svc-card:hover {
+    transform: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   7. STATS
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .stat-item {
+    padding: 30px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Vertical separators between pairs */
+  .stat-item::after {
+    top: 15%;
+    height: 70%;
+  }
+
+  .stat-item:nth-child(2n)::after {
+    display: none;
+  }
+
+  .stat-num {
+    font-size: clamp(2.4rem, 10vw, 3.6rem);
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-item {
+    padding: 24px 12px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   8. PORTFOLIO / WORK GRID
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .work-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 185px);
+    gap: 3px;
+  }
+
+  /* Reset any large-card overrides */
+  .cat-card:nth-child(n) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  /* Always show info — no hover dependency on touch */
+  .cat-btn {
+    display: none; /* cleaner on mobile */
+  }
+
+  .cat-info-text h3 {
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+
+  .cat-info-text span {
+    font-size: 0.56rem;
+    letter-spacing: 2px;
+    opacity: 1;
+  }
+
+  .cat-info {
+    padding: 14px 14px 16px;
+  }
+
+  .cat-index {
+    top: 12px;
+    left: 14px;
+    font-size: 0.65rem;
+  }
+
+  /* Kill hover lift on touch devices */
+  .cat-card:hover {
+    transform: none !important;
+    outline: none !important;
+    z-index: auto !important;
+  }
+
+  .cat-card:hover img {
+    transform: none !important;
+    filter: brightness(0.7) saturate(0.85) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .work-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 155px);
+    gap: 3px;
+  }
+
+  .cat-info-text h3 {
+    font-size: 0.85rem;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   9. GALLERY PANEL (gp-panel) — mobile UX
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .gp-panel {
+    border-radius: 16px 16px 0 0;
+    top: 6vh;          /* leaves a sliver of page visible = clear it's modal */
+    inset: 6vh 0 0 0;
+    transform: translateY(110%);
+  }
+
+  .gp-panel.open {
+    transform: translateY(0);
+  }
+
+  .gp-header {
+    padding: 20px 20px 16px;
+    align-items: center;
+  }
+
+  .gp-title {
+    font-size: 1.35rem;
+  }
+
+  .gp-label {
+    font-size: 0.55rem;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+
+  .gp-count {
+    font-size: 0.65rem;
+  }
+
+  .gp-close {
+    width: 38px;
+    height: 38px;
+    font-size: 0.85rem;
+  }
+
+  .gp-track-wrap {
+    padding: 16px 16px 10px;
+  }
+
+  .gp-card {
+    width: clamp(165px, 60vw, 220px);
+    border-radius: 8px;
+  }
+
+  .gp-track {
+    gap: 12px;
+  }
+
+  .gp-hint {
+    padding: 8px 20px 14px;
+  }
+
+  .gp-hint span {
+    font-size: 0.55rem;
+    letter-spacing: 2.5px;
+  }
+
+  /* Lightbox controls — easier thumb reach */
+  .gp-lb-prev { left: 10px; }
+  .gp-lb-next { right: 10px; }
+
+  .gp-lb-prev,
+  .gp-lb-next {
+    width: 44px;
+    height: 44px;
+    font-size: 0.8rem;
+  }
+
+  .gp-lb img {
+    max-width: 96vw;
+    max-height: 82vh;
+  }
+
+  .gp-lb-close {
+    top: 14px;
+    right: 14px;
+  }
+
+  .gp-lb-caption {
+    font-size: 0.55rem;
+    bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gp-card {
+    width: clamp(155px, 72vw, 200px);
+  }
+
+  .gp-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   10. TESTIMONIALS
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .testi-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .testi-card {
+    padding: 30px 24px;
+    /* Disable hover lift — avoids stuck states on touch */
+  }
+
+  .testi-card:hover {
+    transform: none !important;
+  }
+
+  .t-quote {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   11. JOURNAL / BLOG GRID
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+
+  .blog-card.featured {
+    grid-column: auto;
+  }
+
+  .blog-card.featured .blog-card-img {
+    height: 200px;
+  }
+
+  .blog-card.featured h3 {
+    font-size: 1.45rem;
+  }
+
+  .blog-card.featured .blog-card-body {
+    padding: 28px 22px 32px;
+  }
+
+  .blog-card-img {
+    height: 180px;
+  }
+
+  .blog-card-body {
+    padding: 24px 20px 28px;
+  }
+
+  .blog-card h3 {
+    font-size: 1.2rem;
+    line-height: 1.25;
+  }
+
+  .blog-card p.blog-excerpt {
+    font-size: 0.85rem;
+    /* Limit excerpt lines on mobile */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .journal-intro {
+    margin-bottom: 3rem;
+  }
+
+  .journal-intro p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Blog Modal — mobile */
+@media (max-width: 768px) {
+  .blog-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .blog-modal-inner {
+    max-height: 92dvh;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+  }
+
+  .blog-modal-hero {
+    height: 200px;
+  }
+
+  .blog-modal-content {
+    padding: 28px 20px 36px;
+  }
+
+  .blog-modal-content h2 {
+    font-size: clamp(1.6rem, 5.5vw, 2rem);
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .blog-modal-meta {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+  }
+
+  .blog-modal-body {
+    font-size: 0.92rem;
+    line-height: 1.85;
+  }
+
+  .blog-modal-body blockquote {
+    padding: 12px 18px;
+    font-size: 1rem;
+  }
+
+  .blog-modal-close {
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   12. CTA SECTION
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .cta-glass {
+    padding: 44px 24px;
+    width: 100%;
+  }
+
+  .cta-body .s-title {
+    font-size: clamp(2rem, 7vw, 2.8rem);
+  }
+
+  .cta-body p {
+    font-size: 0.92rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta-glass {
+    padding: 36px 18px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   13. CONTACT SECTION
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    max-width: 100%;
+  }
+
+  .contact-info > p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  .c-methods {
+    gap: 14px;
+  }
+
+  .c-method {
+    padding: 16px 18px;
+    gap: 14px;
+  }
+
+  /* Disable translateX on touch */
+  .c-method:hover {
+    transform: none !important;
+  }
+
+  .c-method i {
+    font-size: 1.15rem;
+  }
+
+  .c-method h4 {
+    font-size: 0.85rem;
+  }
+
+  .c-method p {
+    font-size: 0.8rem;
+  }
+
+  .btn-wa {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1.2rem;
+    padding: 14px 20px;
+  }
+
+  .contact-form-glass {
+    padding: 28px 20px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   14. FOOTER
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .footer-top {
+    padding: 60px 0 40px;
+    background-attachment: scroll !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .f-brand {
+    grid-column: 1 / -1; /* full width on first row */
+  }
+
+  .f-brand p {
+    max-width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .socials a {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  /* Disable lift on touch */
+  .socials a:hover {
+    transform: none !important;
+  }
+
+  .f-col h5 {
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    margin-bottom: 18px;
+  }
+
+  .f-col ul li {
+    margin-bottom: 10px;
+  }
+
+  .f-col ul a {
+    font-size: 0.85rem;
+  }
+
+  /* No padding-left shift on touch */
+  .f-col ul a:hover {
+    padding-left: 0 !important;
+  }
+
+  .footer-bottom .container {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .footer-bottom p {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+
+  .footer-top {
+    padding: 48px 0 32px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   15. BUTTONS — touch-friendly sizing
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .btn {
+    padding: 13px 24px;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    /* Remove hover lift — avoids stuck elevated state on touch */
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   16. SCROLL REVEAL — faster on mobile
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .reveal {
+    transition-duration: 0.6s !important;
+    transition-delay: 0s !important; /* stagger looks bad on small screens */
+  }
+
+  /* Softer transforms — less dramatic movement on narrow screens */
+  .reveal.from-bottom { transform: translateY(30px); }
+  .reveal.from-left   { transform: translateX(-25px); }
+  .reveal.from-right  { transform: translateX(25px); }
+  .reveal.from-scale  { transform: scale(0.96); }
+
+  /* Remove all transition-delay overrides on mobile */
+  .delay-1,
+  .delay-2,
+  .delay-3,
+  .delay-4,
+  .delay-5 {
+    transition-delay: 0.05s !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   17. REDUCED MOTION — respect user preference
+───────────────────────────────────────────────*/
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .cat-card,
+  .svc-card,
+  .testi-card,
+  .hero-scroll-line,
+  .hero-scroll-line::after,
+  .pl-bar,
+  .pl-logo,
+  .pl-logo-img {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   18. SMALL UTILITY FIXES
+───────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  /* Prevent horizontal overflow from absolute elements */
+  section {
+    overflow-x: hidden;
+  }
+
+  /* Larger tap targets on links */
+  .f-col ul a,
+  .nav-links a,
+  .footer-bottom a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Blog tag pill — keep inside image */
+  .blog-tag {
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    top: 12px;
+    left: 12px;
+  }
+
+  /* Stat item separator line on 2-col layout */
+  .stats-grid .stat-item:nth-child(2)::after,
+  .stats-grid .stat-item:nth-child(4)::after {
+    display: none;
+  }
+
+  /* Preloader logo — scaled down */
+  .pl-logo-img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .pl-track {
+    width: 160px;
+  }
+
+  /* Hero video: contain compositing cost */
+  .hero-video video {
+    will-change: auto;
+  }
+
+  /* About image: no transform on mobile */
+  .about-img-wrap:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .about-img-wrap:hover img {
+    transform: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   19. SAFE-AREA / NOTCH SUPPORT (iPhone X+)
+───────────────────────────────────────────────*/
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .navbar {
+    padding-top: max(18px, env(safe-area-inset-top));
+  }
+
+  .gp-panel {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .blog-modal-inner {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .hero-btns {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
