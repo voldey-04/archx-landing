@@ -1,0 +1,22 @@
+# robots.txt — Arch X Interior Studio
+# https://www.archxstudio.com/robots.txt
+# Docs: https://developers.google.com/search/docs/crawling-indexing/robots/intro
+
+# Allow all well-behaved crawlers
+User-agent: *
+Allow: /
+
+# Block admin, dev, and non-public paths (add yours here)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /node_modules/
+
+# Don't crawl query-string duplicates
+Disallow: /*?*utm_
+
+# Sitemap location — submit this URL in Google Search Console too
+Sitemap: https://www.archxstudio.com/sitemap.xml
+
+# Crawl-delay hint for less aggressive bots (Googlebot ignores this)
+Crawl-delay: 10
