@@ -1,0 +1,225 @@
+/* ═══════════════════════════════════════════════════════════════
+   ARCH X — MOBILE JS PATCH
+   Paste this INSIDE your existing <script> block,
+   REPLACING the PARALLAX section (applyParallax & its listener).
+   Or include as a separate <script> after your main script.
+   ═══════════════════════════════════════════════════════════════ */
+
+(function () {
+  'use strict';
+
+  /* ── 1. Detect mobile once ── */
+  const isMobile = () => window.innerWidth <= 1024 ||
+    ('ontouchstart' in window) ||
+    navigator.maxTouchPoints > 0;
+
+  /* ── 2. Parallax — disable entirely on mobile ── */
+  function initParallax() {
+    if (isMobile()) return; // bail out on mobile
+
+    const cta  = document.querySelector('.cta-parallax');
+    const ctaImg = cta ? cta.querySelector('img') : null;
+
+    if (!ctaImg) return;
+
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const sy = window.scrollY;
+        const rect = cta.getBoundingClientRect();
+        const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+        if (inView) {
+          const offset = (sy - (sy + rect.top)) * 0.22;
+          ctaImg.style.transform = `translateY(${offset}px)`;
+        }
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
+  /* ── 3. Preloader — shorter delay on mobile ── */
+  function initPreloader() {
+    window.addEventListener('load', () => {
+      const delay = isMobile() ? 800 : 1000; // 200ms faster on mobile
+      setTimeout(() => {
+        const pl = document.getElementById('preloader');
+        if (!pl) return;
+        pl.classList.add('done');
+        setTimeout(() => pl.remove(), 600);
+      }, delay);
+    });
+  }
+
+  /* ── 4. Counter animation — debounced & passive ── */
+  function initCounters() {
+    const counters = document.querySelectorAll('.counter, .stat-num[data-target]');
+    if (!counters.length) return;
+
+    let hasCounted = false;
+    const statsSection = document.querySelector('.stats-section, .stats');
+    if (!statsSection) return;
+
+    const obs = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting || hasCounted) return;
+      hasCounted = true;
+
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        if (!target) return;
+
+        const duration = isMobile() ? 1200 : 1800; // faster on mobile
+        const steps = 40;
+        const inc = target / steps;
+        let current = 0;
+        const interval = duration / steps;
+
+        const tick = () => {
+          current = Math.min(current + inc, target);
+          counter.textContent = Math.ceil(current);
+          if (current < target) setTimeout(tick, interval);
+        };
+        tick();
+      });
+    }, { threshold: 0.4 });
+
+    obs.observe(statsSection);
+  }
+
+  /* ── 5. Scroll reveal — use IntersectionObserver (already good),
+          but reduce threshold on mobile so elements reveal sooner ── */
+  function initReveal() {
+    const threshold = isMobile() ? 0.05 : 0.1;
+    const revObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+  }
+
+  /* ── 6. Mobile: tap-outside closes mobile nav ── */
+  function initNavOverlay() {
+    const navLinks = document.getElementById('navLinks');
+    const hamburger = document.getElementById('hamburger');
+    if (!navLinks || !hamburger) return;
+
+    document.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      if (navLinks.classList.contains('open') &&
+          !navLinks.contains(e.target) &&
+          !hamburger.contains(e.target)) {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  /* ── 7. Prevent body scroll bounce when gallery / modal is open ── */
+  function initScrollLock() {
+    // Already handled by existing code via document.body.style.overflow
+    // This just adds touch-action lock for iOS momentum scroll bleed
+    const lockTargets = ['gpPanel', 'blogModalInner'];
+    lockTargets.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('touchmove', (e) => e.stopPropagation(), { passive: true });
+    });
+  }
+
+  /* ── 8. Lazy-load images only when near viewport on mobile ── */
+  function initLazyLoad() {
+    // Native lazy loading (loading="lazy") is already on images.
+    // This is a safety net for browsers that don't support it.
+    if ('loading' in HTMLImageElement.prototype) return;
+
+    const imgs = document.querySelectorAll('img[loading="lazy"]');
+    const lazyObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const img = e.target;
+          if (img.dataset.src) img.src = img.dataset.src;
+          lazyObs.unobserve(img);
+        }
+      });
+    }, { rootMargin: '200px' });
+
+    imgs.forEach(img => lazyObs.observe(img));
+  }
+
+  /* ── 9. Disable hover-dependent transforms on touch ── */
+  function disableTouchHoverEffects() {
+    if (!isMobile()) return;
+
+    // Add a class to body so CSS can scope :hover overrides
+    document.body.classList.add('is-touch');
+
+    // Prevent sticky :hover on touchscreen by clearing on touchend
+    document.addEventListener('touchend', (e) => {
+      const hoverable = e.target.closest(
+        '.svc-card, .testi-card, .c-method, .cat-card, .btn, .socials a, .about-img-wrap'
+      );
+      if (hoverable) {
+        // Force reflow to clear stuck :hover state
+        hoverable.blur();
+      }
+    }, { passive: true });
+  }
+
+  /* ── 10. Hero video — pause when off-screen (saves battery) ── */
+  function initVideoOptimization() {
+    const video = document.querySelector('.hero-video video');
+    if (!video) return;
+
+    const videoObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          video.play().catch(() => {}); // autoplay may be blocked
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.1 });
+
+    videoObs.observe(video);
+
+    // On mobile with low data preference — skip video entirely
+    if (isMobile() && navigator.connection) {
+      const conn = navigator.connection;
+      if (conn.saveData || conn.effectiveType === '2g' || conn.effectiveType === 'slow-2g') {
+        video.remove();
+      }
+    }
+  }
+
+  /* ── Init everything after DOM ready ── */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initParallax();
+      initCounters();
+      initReveal();
+      initNavOverlay();
+      initScrollLock();
+      initLazyLoad();
+      disableTouchHoverEffects();
+      initVideoOptimization();
+    });
+  } else {
+    initParallax();
+    initCounters();
+    initReveal();
+    initNavOverlay();
+    initScrollLock();
+    initLazyLoad();
+    disableTouchHoverEffects();
+    initVideoOptimization();
+  }
+
+  // Preloader needs load event — init separately
+  initPreloader();
+
+})();
