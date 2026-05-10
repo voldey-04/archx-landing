@@ -61,10 +61,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<!-- Preload critical above-the-fold font weights -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
-<!-- Font Awesome loaded with display=swap equivalent via media trick to avoid render-blocking -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
@@ -439,7 +437,6 @@ ul{list-style:none;}
 .logo{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-head);font-size:1.9rem;letter-spacing:3px;font-weight:600;color:var(--white);}
 .logo em{font-weight:300;color:var(--gold);font-style:normal;transition:color .4s ease;}
 .logo:hover em{color:var(--pure);}
-/* Logo image */
 .logo-img{
   width:44px;height:44px;object-fit:cover;flex-shrink:0;
   border-radius:50%;
@@ -453,7 +450,6 @@ ul{list-style:none;}
   border-color:rgba(201,169,110,.7);
   box-shadow:0 0 0 4px rgba(201,169,110,.12), 0 0 22px rgba(201,169,110,.4);
 }
-/* Preloader logo image */
 .pl-logo-img{
   width:100px;height:100px;object-fit:cover;margin-bottom:28px;
   border-radius:50%;
@@ -551,39 +547,17 @@ ul{list-style:none;}
 .stat-num sup{font-size:1.6rem;vertical-align:super;color:var(--gold);}
 .stat-label{font-size:.74rem;letter-spacing:3px;text-transform:uppercase;color:var(--grey3);margin-top:14px;}
 
-/* ── PORTFOLIO GRID — zero gaps, fixed placement ── */
-/*
-  Layout map (3 cols, each row = 380px):
-  ┌──────────────┬───────────┐  row 1-2
-  │  item-1 (LR) │  item-2   │
-  │  2 col × 2r  │  1col×2r  │
-  ├───────┬───────┴───────────┤  row 3-4
-  │item-3 │     item-4        │
-  │1c×2r  │     2col×2r       │
-  ├───────┴──────┬────────────┤  row 5 (revealed)
-  │   item-5     │   item-6   │
-  │  2col × 1r   │  1col × 1r │
-  └──────────────┴────────────┘
-*/
-/* ═══════════════════════════════════════════
-   PREMIUM GALLERY — FEATURED WORK
-═══════════════════════════════════════════ */
-
-/* Thin gold rule above section */
+/* PORTFOLIO GRID */
 #portfolio .port-rule{
   width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);
   margin:0 auto 60px;
 }
-
-/* ── 3×2 uniform chooser grid ── */
 .work-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   grid-template-rows:repeat(2,360px);
   gap:4px;
 }
-
-/* All cards fill their cell — reset editorial overrides */
 .cat-card:nth-child(1),
 .cat-card:nth-child(2),
 .cat-card:nth-child(3),
@@ -593,23 +567,17 @@ ul{list-style:none;}
   grid-column:auto;
   grid-row:auto;
 }
-
-/* Base card */
 .cat-card{
   position:relative;overflow:hidden;
   cursor:pointer;background:#0a0a0a;
   will-change:transform;
 }
-
-/* Image */
 .cat-card img{
   width:100%;height:100%;object-fit:cover;
   filter:brightness(.7) saturate(.85);
   transition:transform 1.2s cubic-bezier(0.22,1,0.36,1),
              filter .7s ease;
 }
-
-/* Always-visible dark gradient base */
 .cat-card::before{
   content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(180deg,
@@ -618,24 +586,18 @@ ul{list-style:none;}
     rgba(0,0,0,.82) 100%);
   transition:opacity .55s ease;
 }
-
-/* Gold diagonal shimmer — swipes on hover */
 .cat-card::after{
   content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
   background:linear-gradient(115deg,transparent 25%,rgba(201,169,110,.11) 50%,transparent 75%);
   transform:translateX(-130%);
   transition:transform 1s cubic-bezier(0.22,1,0.36,1);
 }
-
-/* ── Info block ── */
 .cat-info{
   position:absolute;bottom:0;left:0;right:0;z-index:4;
   padding:22px 26px 24px;
   display:flex;align-items:flex-end;justify-content:space-between;
   gap:12px;
 }
-
-/* Index number (01, 02 …) */
 .cat-index{
   position:absolute;top:20px;left:24px;z-index:5;
   font-family:var(--font-head);font-size:.75rem;
@@ -643,10 +605,6 @@ ul{list-style:none;}
   transition:color .4s ease;
 }
 .cat-card:hover .cat-index{ color:var(--gold); }
-
-/* Gold thin top-edge accent line */
-.cat-card::before{ /* repurposed — keep gradient */ }
-
 .cat-info-text{flex:1;min-width:0;}
 .cat-info-text h3{
   font-family:var(--font-head);
@@ -663,8 +621,6 @@ ul{list-style:none;}
   transition:opacity .45s ease .1s;
 }
 .cat-card:hover .cat-info-text span{ opacity:1; }
-
-/* Explore pill */
 .cat-btn{
   display:inline-flex;align-items:center;gap:8px;
   border:1px solid rgba(201,169,110,.5);
@@ -677,8 +633,6 @@ ul{list-style:none;}
   flex-shrink:0;white-space:nowrap;
 }
 .cat-btn i{ font-size:.6rem; transition:transform .3s ease; }
-
-/* ── HOVER state ── */
 .cat-card:hover{
   z-index:6;
   outline:1px solid rgba(201,169,110,.28);
@@ -697,8 +651,6 @@ ul{list-style:none;}
   background:rgba(201,169,110,.15);color:#fff;
 }
 .cat-card:hover .cat-btn:hover i{ transform:translateX(3px); }
-
-
 
 /* TESTIMONIALS */
 .testi-section{position:relative;}
@@ -805,7 +757,7 @@ ul{list-style:none;}
 .footer-bottom .gold-link{color:var(--gold);transition:color .3s ease;}
 .footer-bottom .gold-link:hover{color:var(--pure);}
 
-/* SECTION BACKGROUNDS — all deep dark with subtle luxury texture */
+/* SECTION BACKGROUNDS */
 #about{
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(201,169,110,.04) 0%, transparent 60%),
@@ -841,8 +793,6 @@ ul{list-style:none;}
     url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1800&q=85');
   background-size:cover;background-position:center top;background-attachment:fixed;position:relative;
 }
-/* Subtle left-side dark gradient so left text is always readable,
-   right side stays slightly brighter to show the image */
 #contact::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(100deg,
@@ -854,7 +804,6 @@ ul{list-style:none;}
 #contact>.container{position:relative;z-index:1;}
 .contact-section::before{z-index:1;}
 
-/* ── Force all text inside #contact fully visible ── */
 #contact .s-label{color:var(--gold) !important;opacity:1 !important;}
 #contact .s-title{color:#fff !important;opacity:1 !important;}
 #contact .s-title em{color:var(--gold) !important;}
@@ -871,13 +820,11 @@ ul{list-style:none;}
   border-color:rgba(201,169,110,.3) !important;
 }
 
-/* ── Performance: containment & will-change ── */
+/* Performance */
 .cat-card{ contain:layout style; }
 .hero-video video{ will-change:transform; }
 .about-img-wrap img{ will-change:transform,filter; }
 .svc-card{ contain:layout style; }
-
-/* ── Preloader fade: GPU-composited ── */
 .preloader{ will-change:opacity; }
 
 /* SCROLL ANIMATIONS */
@@ -893,24 +840,14 @@ ul{list-style:none;}
 .delay-4{transition-delay:.6s}
 .delay-5{transition-delay:.75s}
 
-/* ──────────────────────────────────────────────
-   PREMIUM GLOBAL UPGRADES
-────────────────────────────────────────────── */
-
-/* Smoother page-level scroll */
+/* PREMIUM GLOBAL UPGRADES */
 html { scroll-behavior: smooth; }
-
-/* Subtle grain overlay for depth */
 body::after {
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   opacity:.022;mix-blend-mode:overlay;
 }
-
-/* Section divider gold glow lines — all sections */
 section::before { transition: opacity .6s ease; }
-
-/* Service card: lift + gold accent on hover */
 .svc-card {
   transition: transform .5s cubic-bezier(0.22,1,0.36,1),
               box-shadow .5s cubic-bezier(0.22,1,0.36,1),
@@ -920,8 +857,6 @@ section::before { transition: opacity .6s ease; }
   transform: translateY(-6px);
   box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(201,169,110,.12);
 }
-
-/* Testimonial cards: smoother lift */
 .testi-card {
   transition: transform .5s cubic-bezier(0.22,1,0.36,1),
               box-shadow .5s cubic-bezier(0.22,1,0.36,1),
@@ -931,30 +866,22 @@ section::before { transition: opacity .6s ease; }
   transform: translateY(-8px);
   box-shadow: 0 28px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(201,169,110,.15);
 }
-
-/* Contact method cards: smoother */
 .c-method {
   transition: transform .45s cubic-bezier(0.22,1,0.36,1),
               border-color .4s ease, background .4s ease;
 }
 .c-method:hover { transform: translateX(6px); }
-
-/* Button shimmer + scale microinteraction */
 .btn {
   transition: transform .35s cubic-bezier(0.22,1,0.36,1),
               background .4s ease, color .4s ease, box-shadow .4s ease;
 }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
 .btn:active { transform: translateY(0); }
-
-/* Socials lift */
 .socials a {
   transition: transform .35s cubic-bezier(0.22,1,0.36,1),
               border-color .35s ease, color .35s ease;
 }
 .socials a:hover { transform: translateY(-4px); }
-
-/* About image wrap: lift */
 .about-img-wrap {
   transition: transform .6s cubic-bezier(0.22,1,0.36,1),
               box-shadow .6s ease;
@@ -963,8 +890,6 @@ section::before { transition: opacity .6s ease; }
   transform: translateY(-6px);
   box-shadow: 0 32px 70px rgba(0,0,0,.5);
 }
-
-/* Stats numbers: smooth color pulse on hover */
 .stat-item {
   transition: transform .4s cubic-bezier(0.22,1,0.36,1);
 }
@@ -1028,11 +953,7 @@ section::before { transition: opacity .6s ease; }
   .stats-grid{grid-template-columns:1fr;}
 }
 
-/* ═══════════════════════════════════════════
-   PREMIUM MULTI-CARD GALLERY — STYLES
-═══════════════════════════════════════════ */
-
-/* Backdrop */
+/* PREMIUM GALLERY STYLES */
 .gp-backdrop{
   position:fixed;inset:0;background:rgba(0,0,0,0);
   backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);
@@ -1045,8 +966,6 @@ section::before { transition: opacity .6s ease; }
   background:rgba(0,0,0,.8);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
 }
-
-/* Slide-up panel */
 .gp-panel{
   position:fixed;inset:0;z-index:8100;
   display:flex;flex-direction:column;
@@ -1057,8 +976,6 @@ section::before { transition: opacity .6s ease; }
   pointer-events:none;
 }
 .gp-panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
-
-/* Header */
 .gp-header{
   display:flex;align-items:flex-end;justify-content:space-between;
   padding:36px 56px 28px;
@@ -1089,8 +1006,6 @@ section::before { transition: opacity .6s ease; }
   background:rgba(201,169,110,.12);border-color:var(--gold);color:#fff;
   transform:rotate(90deg);
 }
-
-/* Track wrapper — drag surface */
 .gp-track-wrap{
   flex:1;overflow:hidden;position:relative;
   padding:44px 56px 28px;
@@ -1098,8 +1013,6 @@ section::before { transition: opacity .6s ease; }
 }
 .gp-track-wrap.dragging{cursor:grabbing;}
 .gp-track-wrap.dragging *{pointer-events:none;}
-
-/* Horizontal card track */
 .gp-track{
   display:flex;gap:18px;
   height:100%;
@@ -1108,8 +1021,6 @@ section::before { transition: opacity .6s ease; }
   will-change:transform;
   transition:transform .05s linear;
 }
-
-/* Project card */
 .gp-card{
   position:relative;overflow:hidden;
   border-radius:10px;
@@ -1124,12 +1035,10 @@ section::before { transition: opacity .6s ease; }
   box-shadow:0 8px 32px rgba(0,0,0,.55);
   will-change:transform,filter;
 }
-/* Dim non-hovered siblings */
 .gp-track:hover .gp-card:not(:hover){
   filter:brightness(.52) saturate(.65);
   transform:scale(.965);
 }
-/* Hovered card enlarges */
 .gp-track .gp-card:hover{
   transform:scale(1.045) translateY(-8px);
   box-shadow:0 32px 80px rgba(0,0,0,.75), 0 0 0 1px rgba(201,169,110,.22);
@@ -1142,8 +1051,6 @@ section::before { transition: opacity .6s ease; }
   pointer-events:none;
 }
 .gp-card:hover img{transform:scale(1.07);}
-
-/* Card hover overlay */
 .gp-card-overlay{
   position:absolute;inset:0;
   background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.82) 100%);
@@ -1163,7 +1070,6 @@ section::before { transition: opacity .6s ease; }
 .gp-card-name{
   font-family:var(--font-head);font-size:1rem;color:#fff;font-weight:400;line-height:1.2;
 }
-/* Gold top-bar accent */
 .gp-card::after{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--gold),transparent);
@@ -1171,8 +1077,6 @@ section::before { transition: opacity .6s ease; }
   transition:opacity .42s ease,transform .42s ease;
 }
 .gp-card:hover::after{opacity:1;transform:scaleX(1);}
-
-/* Scroll hint */
 .gp-hint{
   display:flex;align-items:center;gap:16px;
   padding:14px 56px 24px;flex-shrink:0;
@@ -1180,8 +1084,6 @@ section::before { transition: opacity .6s ease; }
 }
 .gp-hint span{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);}
 .gp-hint-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,110,.3),transparent);}
-
-/* ── Lightbox ── */
 .gp-lb{
   position:fixed;inset:0;z-index:9500;
   background:rgba(0,0,0,.97);
@@ -1220,8 +1122,6 @@ section::before { transition: opacity .6s ease; }
   font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
   color:rgba(255,255,255,.4);white-space:nowrap;
 }
-
-/* ── Responsive ── */
 @media(max-width:900px){
   .gp-header{padding:24px 28px 20px;}
   .gp-track-wrap{padding:28px 28px 16px;}
@@ -1239,10 +1139,7 @@ section::before { transition: opacity .6s ease; }
      <link rel="stylesheet" href="mobile-fixes.css">
 </style>
 </head>
-<body> 
-
-
-
+<body>
 
 <!-- PRELOADER -->
 <div class="preloader" id="preloader">
@@ -1274,7 +1171,6 @@ section::before { transition: opacity .6s ease; }
 <!-- HERO with Video -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
   <div class="hero-video">
-    <!-- Autoplay muted video for ambient background; poster serves as LCP image -->
     <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1800&q=85"
       aria-hidden="true" title="Arch X Interior Studio showcase video">
       <source src="hero-video.mp4" type="video/mp4">
@@ -1288,7 +1184,8 @@ section::before { transition: opacity .6s ease; }
     <p class="hero-sub">Bespoke interior design for homes, offices &amp; commercial spaces across Bengaluru. Where precision meets artistry — crafted to reflect your vision.</p>
     <div class="hero-btns">
       <a href="#portfolio" class="btn btn-solid">View Projects</a>
-      <a href="#contact" class="btn btn-glass">Book Free Consultation</a>
+      <!-- ✅ UPDATED: Book Free Consultation → Google Form -->
+      <a href="https://forms.gle/2WcF7bypgpiGMsg56" target="_blank" rel="noopener noreferrer" class="btn btn-glass">Book Free Consultation</a>
     </div>
   </div>
   <div class="hero-scroll" onclick="document.querySelector('#about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll down" role="button" tabindex="0">
@@ -1304,7 +1201,6 @@ section::before { transition: opacity .6s ease; }
       <img src="https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=900&q=85"
            alt="Arch X Interior Studio — award-winning luxury interior design project in Bengaluru"
            width="900" height="620">
-
     </div>
     <div class="about-text reveal from-right">
       <p class="s-label">Our Story</p>
@@ -1355,8 +1251,6 @@ section::before { transition: opacity .6s ease; }
     </div>
   </div>
 </section>
-
-
 
 <!-- PORTFOLIO -->
 <section id="portfolio" class="sp" aria-labelledby="portfolio-heading">
@@ -1469,13 +1363,9 @@ section::before { transition: opacity .6s ease; }
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     PREMIUM MULTI-CARD GALLERY PANEL
-═══════════════════════════════════════════ -->
+<!-- PREMIUM GALLERY PANEL -->
 <div class="gp-backdrop" id="gpBackdrop"></div>
 <div class="gp-panel" id="gpPanel" role="dialog" aria-modal="true" aria-label="Image Gallery">
-
-  <!-- Panel header -->
   <div class="gp-header">
     <div class="gp-header-left">
       <span class="gp-label" id="gpLabel">Category</span>
@@ -1486,19 +1376,13 @@ section::before { transition: opacity .6s ease; }
       <button class="gp-close" id="gpClose" aria-label="Close"><i class="fas fa-times"></i></button>
     </div>
   </div>
-
-  <!-- Scrollable card track -->
   <div class="gp-track-wrap">
     <div class="gp-track" id="gpTrack"></div>
   </div>
-
-  <!-- Scroll hint -->
   <div class="gp-hint" id="gpHint">
     <span>drag or scroll to explore</span>
     <span class="gp-hint-line"></span>
   </div>
-
-  <!-- Lightbox overlay (single image zoom) -->
   <div class="gp-lb" id="gpLb">
     <img src="" alt="" id="gpLbImg">
     <button class="gp-lb-close" id="gpLbClose"><i class="fas fa-times"></i></button>
@@ -1506,9 +1390,7 @@ section::before { transition: opacity .6s ease; }
     <button class="gp-lb-next" id="gpLbNext"><i class="fas fa-chevron-right"></i></button>
     <div class="gp-lb-caption" id="gpLbCaption"></div>
   </div>
-
 </div>
-
 
 <!-- JOURNAL & STORIES -->
 <section id="journal" class="sp" aria-labelledby="journal-heading">
@@ -1680,7 +1562,8 @@ section::before { transition: opacity .6s ease; }
       <p class="s-label" style="justify-content:center;">Ready?</p>
       <h2 class="s-title">Let's Design Your<br><em>Dream Space</em></h2>
       <p>Elevate your environment with Arch X Interior Studio, Bengaluru's most trusted luxury interior designers. Begin your transformation today.</p>
-      <a href="#contact" class="btn btn-solid">Get Free Consultation</a>
+      <!-- ✅ UPDATED: Get Free Consultation → Google Form -->
+      <a href="https://forms.gle/2WcF7bypgpiGMsg56" target="_blank" rel="noopener noreferrer" class="btn btn-solid">Get Free Consultation</a>
     </div>
   </div>
 </section>
@@ -1692,7 +1575,6 @@ section::before { transition: opacity .6s ease; }
       <p class="s-label">Reach Out</p>
       <h2 class="s-title" id="contact-heading">Get In <em>Touch</em></h2>
       <p>Ready to start your project? Fill out the form or reach out directly — we'd love to hear from you and discuss how we can transform your space in Bengaluru.</p>
-      <!-- Local business contact — microdata for crawlers -->
       <address class="c-methods" itemscope itemtype="https://schema.org/LocalBusiness">
         <meta itemprop="name" content="Arch X Interior Studio">
         <div class="c-method">
@@ -1731,7 +1613,6 @@ section::before { transition: opacity .6s ease; }
   </div>
 </section>
 
-<!-- FOOTER -->
 </main><!-- /main-content -->
 
 <footer role="contentinfo" aria-label="Site footer">
@@ -1861,10 +1742,7 @@ const revObs=new IntersectionObserver(entries=>{
 },{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
-
-/* ═══════════════════════════════════════════
-   CATEGORY IMAGE DATA
-═══════════════════════════════════════════ */
+/* CATEGORY IMAGE DATA */
 const catData = {
   'Living Room': [
     { img:'images/Living/living (1).webp',  title:'Living Room — Project 1' },
@@ -1951,13 +1829,8 @@ const catData = {
   ],
 };
 
-
-
-/* ═══════════════════════════════════════════
-   JOURNAL & STORIES — BLOG MODAL
-═══════════════════════════════════════════ */
+/* BLOG MODAL */
 (function(){
-
 const blogs = [
   {
     tag: 'Living Room',
@@ -2117,8 +1990,9 @@ document.querySelectorAll('.blog-card').forEach(card => {
 close.addEventListener('click', closeBlog);
 overlay.addEventListener('click', closeBlog);
 document.addEventListener('keydown', e => { if(e.key==='Escape' && modal.classList.contains('open')) closeBlog(); });
-
 })();
+
+/* GALLERY PANEL */
 (function(){
 const backdrop  = document.getElementById('gpBackdrop');
 const panel     = document.getElementById('gpPanel');
@@ -2140,7 +2014,6 @@ let currentList = [];
 let lbIdx = 0;
 let dragX = 0;
 
-/* Build card track */
 function buildTrack(list){
   gpTrack.innerHTML = '';
   gpTrack.style.transform = 'translateX(0)';
@@ -2148,18 +2021,15 @@ function buildTrack(list){
   list.forEach((item, i) => {
     const card = document.createElement('div');
     card.className = 'gp-card';
-
     const img = document.createElement('img');
     img.src = item.img; img.alt = item.title;
     img.loading = 'lazy'; img.decoding = 'async';
-
     const ov = document.createElement('div');
     ov.className = 'gp-card-overlay';
     ov.innerHTML = '<div class="gp-card-info">'
       + '<span class="gp-card-num">'  + String(i+1).padStart(2,'0') + '</span>'
       + '<span class="gp-card-name">' + item.title.split('\u2014')[0].trim() + '</span>'
       + '</div>';
-
     card.appendChild(img);
     card.appendChild(ov);
     card.addEventListener('click', () => openLightbox(i));
@@ -2167,7 +2037,6 @@ function buildTrack(list){
   });
 }
 
-/* Open gallery */
 function openGallery(catName){
   currentList = catData[catName] || [];
   if(!currentList.length) return;
@@ -2182,14 +2051,12 @@ function openGallery(catName){
   setTimeout(() => { gpHint.style.opacity = '0'; }, 3200);
 }
 
-/* Close gallery */
 function closeGallery(){
   backdrop.classList.remove('open');
   panel.classList.remove('open');
   document.body.style.overflow = '';
 }
 
-/* ── Drag-to-scroll ── */
 let isDragging=false, startX=0, velX=0, lastX=0, rafId=null;
 
 function clampAndApply(){
@@ -2224,7 +2091,6 @@ window.addEventListener('mouseup', () => {
   momentum();
 });
 
-/* Touch */
 let tStartX=0, tLastX=0, tVelX=0;
 trackWrap.addEventListener('touchstart', e => {
   tStartX = e.touches[0].clientX - dragX;
@@ -2239,14 +2105,12 @@ trackWrap.addEventListener('touchmove', e => {
 },{passive:true});
 trackWrap.addEventListener('touchend', () => { velX=tVelX; momentum(); });
 
-/* Wheel */
 trackWrap.addEventListener('wheel', e => {
   e.preventDefault();
   dragX -= e.deltaY * 1.4;
   clampAndApply();
 },{passive:false});
 
-/* ── Lightbox ── */
 function openLightbox(idx){
   lbIdx=idx;
   const item=currentList[lbIdx];
@@ -2271,7 +2135,6 @@ gpLbPrev.addEventListener('click', () => lbNav(-1));
 gpLbNext.addEventListener('click', () => lbNav(1));
 gpLb.addEventListener('click', e => { if(e.target===gpLb) closeLightbox(); });
 
-/* Touch swipe in lightbox */
 let lbTouchX=0;
 gpLb.addEventListener('touchstart', e => { lbTouchX=e.touches[0].clientX; },{passive:true});
 gpLb.addEventListener('touchend', e => {
@@ -2279,7 +2142,6 @@ gpLb.addEventListener('touchend', e => {
   if(Math.abs(dx)>44){ dx<0 ? lbNav(1) : lbNav(-1); }
 },{passive:true});
 
-/* ── Bindings ── */
 gpClose.addEventListener('click', closeGallery);
 backdrop.addEventListener('click', closeGallery);
 document.querySelectorAll('.cat-card').forEach(card => {
@@ -2296,6 +2158,6 @@ document.addEventListener('keydown', e => {
 });
 })();
 </script>
-     <script src="mobile-patch.js"></script>
+<script src="mobile-patch.js"></script>
 </body>
 </html>
