@@ -61,8 +61,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<!-- Preload LCP hero poster image -->
-<link rel="preload" as="image" href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1800&q=85" fetchpriority="high">
+<!-- Preload LCP hero poster — mobile-optimised (biggest LCP fix) -->
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp" imagesrcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp 480w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp 800w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=70&fm=webp 1400w" imagesizes="100vw" fetchpriority="high">
 <!-- Fonts: non-render-blocking via media swap trick -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -168,6 +168,17 @@
 }
 </script>
 <style>
+/* Font display swap — show system fonts immediately while web fonts load */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-display: swap;
+  src: local('Georgia'), local('Times New Roman');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-display: swap;
+  src: local('system-ui'), local('-apple-system');
+}
 :root{
   --black:#060606;--black2:#0e0e0e;--black3:#141414;
   --grey1:#1f1f1f;--grey2:#2a2a2a;--grey3:#555555;--grey4:#888888;--grey5:#bbbbbb;
@@ -199,7 +210,7 @@ ul{list-style:none;}
   background-image:
     radial-gradient(ellipse at 30% 70%, rgba(201,169,110,.04) 0%, transparent 60%),
     radial-gradient(ellipse at 85% 15%, rgba(201,169,110,.03) 0%, transparent 55%),
-    url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1800&q=80');
+    url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=65&fm=webp');
   background-size:cover;background-position:center;background-attachment:scroll;position:relative;
 }
 #journal::before{content:'';position:absolute;inset:0;background:linear-gradient(150deg,rgba(4,4,4,.98) 0%,rgba(8,8,8,.97) 50%,rgba(5,5,5,.98) 100%);z-index:0;pointer-events:none;}
@@ -493,9 +504,9 @@ ul{list-style:none;}
 .hero-btns{display:flex;gap:18px;flex-wrap:wrap;}
 .hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;z-index:2;}
 .hero-scroll span{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--grey3);}
-.hero-scroll-line{width:1px;height:55px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2.5s ease infinite;position:relative;}
-.hero-scroll-line::after{content:'';position:absolute;bottom:0;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--gold);animation:scrollPulse 2.5s ease infinite;}
-@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.hero-scroll-line{width:1px;height:55px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2.5s ease infinite;position:relative;will-change:opacity;}
+.hero-scroll-line::after{content:'';position:absolute;bottom:0;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--gold);animation:scrollPulse 2.5s ease infinite;will-change:opacity;}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:translateZ(0)}50%{opacity:1;transform:translateZ(0)}}
 
 /* SECTION LABELS */
 .s-label{font-family:var(--font-body);font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--grey3);margin-bottom:16px;display:flex;align-items:center;gap:14px;}
@@ -763,7 +774,7 @@ ul{list-style:none;}
   padding:90px 0 55px;
   position:relative;
   background-image:
-    url('https://images.unsplash.com/photo-1536895058696-a69b1c7ba34f?w=1800&q=80');
+    url('https://images.unsplash.com/photo-1536895058696-a69b1c7ba34f?w=1200&q=65&fm=webp');
   background-size:cover;
   background-position:center;
   background-attachment:scroll;
@@ -814,7 +825,7 @@ ul{list-style:none;}
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(201,169,110,.04) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 20%, rgba(201,169,110,.03) 0%, transparent 55%),
-    url('https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1800&q=80');
+    url('https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1200&q=65&fm=webp');
   background-size:cover;background-position:center;background-attachment:scroll;position:relative;
 }
 #about::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(4,4,4,.97) 0%,rgba(8,8,8,.96) 50%,rgba(6,6,6,.97) 100%);z-index:0;pointer-events:none;}
@@ -823,7 +834,7 @@ ul{list-style:none;}
 #services{
   background-image:
     radial-gradient(ellipse at 75% 60%, rgba(201,169,110,.05) 0%, transparent 55%),
-    url('https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?w=1800&q=80');
+    url('https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?w=1200&q=65&fm=webp');
   background-size:cover;background-position:center top;background-attachment:scroll;position:relative;
 }
 #services::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,6,6,.98) 0%,rgba(10,10,10,.97) 100%);z-index:0;pointer-events:none;}
@@ -842,7 +853,7 @@ ul{list-style:none;}
 
 #contact{
   background-image:
-    url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1800&q=85');
+    url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=65&fm=webp');
   background-size:cover;background-position:center top;background-attachment:scroll;position:relative;
 }
 /* Subtle left-side dark gradient so left text is always readable,
@@ -1320,8 +1331,9 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <!-- HERO with Video -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
   <div class="hero-video">
-    <!-- Autoplay muted video for ambient background; poster serves as LCP image -->
-    <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1800&q=85"
+    <!-- Video background — poster is LCP element, sized for mobile first -->
+    <video autoplay muted loop playsinline
+      poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp"
       aria-hidden="true" title="Arch X Interior Studio showcase video" width="1800" height="1012">
       <source src="hero-video.mp4" type="video/mp4">
     </video>
@@ -1347,9 +1359,9 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <section id="about" class="sp" aria-labelledby="about-heading">
   <div class="container about-grid">
     <div class="about-img-wrap reveal from-left">
-      <img src="https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=900&q=85"
+      <img src="https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=700&q=70&fm=webp"
            alt="Arch X Interior Studio — award-winning luxury interior design project in Bengaluru"
-           width="900" height="620">
+           width="700" height="620" loading="lazy" decoding="async">
 
     </div>
     <div class="about-text reveal from-right">
@@ -1573,7 +1585,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card featured reveal from-left" data-blog="0" tabindex="0" role="button" aria-label="Read: The Living Room That Took Six Months to Get Right">
         <div class="blog-card-img">
           <span class="blog-tag">Living Room</span>
-          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=80"
+          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=65&fm=webp"
                alt="Warm modern living room with oak shelving and layered lighting"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -1593,7 +1605,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-right" data-blog="1" tabindex="0" role="button" aria-label="Read: Why We Stopped Recommending White Kitchens">
         <div class="blog-card-img">
           <span class="blog-tag">Kitchen</span>
-          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80"
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=65&fm=webp"
                alt="Dark walnut kitchen with brass fittings and stone countertop"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -1613,7 +1625,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-bottom" data-blog="2" tabindex="0" role="button" aria-label="Read: Light Before Everything Else">
         <div class="blog-card-img">
           <span class="blog-tag">Design Thinking</span>
-          <img src="https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=700&q=80"
+          <img src="https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=600&q=65&fm=webp"
                alt="Bedroom with layered warm ambient lighting and linen textures"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -1633,7 +1645,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-left" data-blog="3" tabindex="0" role="button" aria-label="Read: Turning a Bengaluru Balcony into a Third Room">
         <div class="blog-card-img">
           <span class="blog-tag">Balcony</span>
-          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=700&q=80"
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=65&fm=webp"
                alt="Outdoor balcony with planters, teak flooring and rattan seating"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -1653,7 +1665,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-bottom" data-blog="4" tabindex="0" role="button" aria-label="Read: The Honest Case for Neutral Bedrooms">
         <div class="blog-card-img">
           <span class="blog-tag">Bedroom</span>
-          <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=700&q=80"
+          <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=65&fm=webp"
                alt="Serene bedroom with taupe tones and textured wall panels"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -1673,7 +1685,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-right" data-blog="5" tabindex="0" role="button" aria-label="Read: What a Dining Room Is Actually For">
         <div class="blog-card-img">
           <span class="blog-tag">Dining</span>
-          <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=700&q=80"
+          <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=600&q=65&fm=webp"
                alt="Intimate dining space with pendant lighting and oval table"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -1716,7 +1728,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <!-- CTA -->
 <section class="sp cta-section" aria-label="Call to action — Book a free interior design consultation">
   <div class="cta-parallax" id="ctaParallax">
-    <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1800&q=80"
+    <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=65&fm=webp"
          alt="Luxury interior design inspiration — Arch X Studio Bengaluru"
          loading="lazy" decoding="async" aria-hidden="true">
     <div class="cta-overlay" aria-hidden="true"></div>
@@ -1876,13 +1888,20 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
+/* ACTIVE NAV — use IntersectionObserver instead of getBoundingClientRect on scroll (fixes forced reflow) */
 const sections=document.querySelectorAll('section[id]');
 const navLinks=document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll',()=>{
-  let current='';
-  sections.forEach(s=>{const r=s.getBoundingClientRect();if(r.top<=200)current=s.getAttribute('id');});
-  navLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active');});
-},{passive:true});
+let currentSection = '';
+const sectionObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ currentSection = e.target.getAttribute('id'); }
+  });
+  navLinks.forEach(l=>{
+    l.classList.remove('active');
+    if(l.getAttribute('href')==='#'+currentSection) l.classList.add('active');
+  });
+},{threshold:0.3, rootMargin:'-10% 0px -70% 0px'});
+sections.forEach(s=>sectionObs.observe(s));
 
 /* PARALLAX — desktop only (mobile: fixed background-attachment causes scroll jank) */
 const pxItems=[
@@ -2014,7 +2033,7 @@ const blogs = [
     date: 'March 2025',
     readTime: '7 min read',
     title: 'The Living Room That Took Six Months to Get Right',
-    img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=85',
+    img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=70&fm=webp',
     imgAlt: 'Warm modern living room with layered lighting',
     body: `
       <p>Our client had moved three times in four years. Each time, he had hired someone to furnish the apartment, spent more than he intended, and still found himself eating dinner on the couch because the living room felt like a showroom — not a place to be.</p>
@@ -2035,7 +2054,7 @@ const blogs = [
     date: 'January 2025',
     readTime: '5 min read',
     title: 'Why We Stopped Recommending White Kitchens',
-    img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&q=85',
+    img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=70&fm=webp',
     imgAlt: 'Dark walnut kitchen with brass hardware and stone worktop',
     body: `
       <p>There is a period in every designer's career where you specify white kitchens on autopilot. They work. Clients are happy at handover. The photographs are clean and usable. The brief is easy to hit.</p>
@@ -2054,7 +2073,7 @@ const blogs = [
     date: 'November 2024',
     readTime: '6 min read',
     title: 'Light Before Everything Else',
-    img: 'https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=1200&q=85',
+    img: 'https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=800&q=70&fm=webp',
     imgAlt: 'Bedroom with layered warm ambient lighting',
     body: `
       <p>If we could reorder the way most people approach an interior project, we would put lighting first. Not furniture. Not colour. Not material finishes. Lighting — because every other decision you make will either be validated or undermined by it.</p>
@@ -2073,7 +2092,7 @@ const blogs = [
     date: 'September 2024',
     readTime: '4 min read',
     title: 'Turning a Bengaluru Balcony into a Third Room',
-    img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=85',
+    img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=70&fm=webp',
     imgAlt: 'Balcony with teak flooring, planters, and rattan seating',
     body: `
       <p>Bengaluru apartments come with balconies as a matter of course. Most of them, in our experience, function as overflow storage for objects that do not have a home inside — a bicycle, old boxes, a pressure cooker with a broken handle.</p>
@@ -2091,7 +2110,7 @@ const blogs = [
     date: 'July 2024',
     readTime: '5 min read',
     title: 'The Honest Case for Neutral Bedrooms',
-    img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=85',
+    img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=70&fm=webp',
     imgAlt: 'Serene bedroom with taupe tones and layered textures',
     body: `
       <p>Every few years, someone declares that the neutral bedroom is over — that it is time for bold colour, pattern, and personality in the most intimate room of the house. There are always compelling examples. Rooms painted in deep forest green or terracotta or dusty blue, photographed beautifully, shared widely.</p>
@@ -2109,7 +2128,7 @@ const blogs = [
     date: 'May 2024',
     readTime: '5 min read',
     title: 'What a Dining Room Is Actually For',
-    img: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=1200&q=85',
+    img: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800&q=70&fm=webp',
     imgAlt: 'Intimate dining room with pendant lighting and oval table',
     body: `
       <p>The dining room is the most socially loaded space in the home. It is where the family argues and reconciles. Where guests become friends. Where birthdays are celebrated and bad news is delivered. It carries more of a household's emotional weight than any other room — and most designers treat it as a furniture placement exercise.</p>
