@@ -105,14 +105,14 @@
         "height": 512
       },
       "image": "https://www.archxstudio.com/og-image.jpg",
-      "telephone": "+91-8748825038",
+      "telephone": "+916383899602",
       "email": "arch.xecture@gmail.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "YOUR STREET ADDRESS",
+        "streetAddress": "72, SM Kalyanamantapa Rd, Jarganahalli, JP Nagar Phase 6, J. P. Nagar",
         "addressLocality": "Bengaluru",
         "addressRegion": "Karnataka",
-        "postalCode": "560XXX",
+        "postalCode": "560078",
         "addressCountry": "IN"
       },
       "geo": {
@@ -493,11 +493,33 @@ ul{list-style:none;}
 .nav-links a:hover{color:var(--white);}
 .nav-links a:hover::after{width:100%;}
 .nav-links a.active{color:var(--gold);}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
-.hamburger span{display:block;width:24px;height:1px;background:var(--white);transition:all .3s ease;}
-.hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
-.hamburger.open span:nth-child(2){opacity:0;}
-.hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+/* ── HAMBURGER — classic 3-bar style ── */
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:6px;
+  cursor:pointer;
+  padding:8px;
+  background:transparent;
+  border:none;
+  border-radius:4px;
+  transition:background .3s ease;
+}
+.hamburger:hover{background:rgba(201,169,110,.1);}
+.hamburger span{
+  display:block;
+  width:26px;
+  height:2px;
+  background:var(--white);
+  transition:all .35s ease;
+  border-radius:2px;
+  transform-origin:center;
+}
+/* Open state — X */
+.hamburger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
 
 /* HERO with Video */
 .hero{height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;}
@@ -527,6 +549,63 @@ ul{list-style:none;}
 .s-title{font-size:clamp(2.4rem,4vw,3.8rem);line-height:1.08;margin-bottom:1.2rem;}
 .s-title em{font-style:italic;color:var(--grey4);transition:color .4s ease;}
 .s-title:hover em{color:var(--gold);}
+
+/* INSTAGRAM CTA STRIP */
+.insta-cta-strip{
+  background:linear-gradient(90deg,#0e0e0e 0%,#111 50%,#0e0e0e 100%);
+  border-top:1px solid rgba(201,169,110,.18);
+  border-bottom:1px solid rgba(201,169,110,.18);
+  padding:22px 0;
+  position:relative;z-index:3;
+}
+.insta-cta-strip::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,rgba(201,169,110,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.insta-cta-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  position:relative;z-index:1;
+}
+.insta-cta-left{display:flex;align-items:center;gap:18px;}
+.insta-cta-icon{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;color:#fff;
+  box-shadow:0 4px 18px rgba(220,39,67,.35);
+  transition:transform .35s cubic-bezier(0.22,1,0.36,1),box-shadow .35s ease;
+}
+.insta-cta-strip:hover .insta-cta-icon{
+  transform:scale(1.08) rotate(-4deg);
+  box-shadow:0 6px 26px rgba(220,39,67,.5);
+}
+.insta-cta-handle{
+  font-family:var(--font-head);font-size:1.15rem;color:var(--white);
+  letter-spacing:.5px;line-height:1.2;margin-bottom:3px;
+}
+.insta-cta-sub{
+  font-size:.75rem;color:var(--grey3);letter-spacing:.5px;
+}
+.insta-cta-btn{
+  background:transparent;
+  border:1px solid rgba(201,169,110,.45);
+  color:var(--gold);
+  padding:12px 26px;font-size:.72rem;letter-spacing:2.5px;
+  display:inline-flex;align-items:center;gap:10px;
+  transition:all .38s cubic-bezier(0.22,1,0.36,1);
+  white-space:nowrap;flex-shrink:0;
+}
+.insta-cta-btn:hover{
+  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  border-color:transparent;color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(220,39,67,.35);
+}
+@media(max-width:640px){
+  .insta-cta-inner{flex-direction:column;align-items:flex-start;gap:16px;}
+  .insta-cta-btn{width:100%;justify-content:center;}
+}
 
 /* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
@@ -577,19 +656,6 @@ ul{list-style:none;}
 .stat-label{font-size:.74rem;letter-spacing:3px;text-transform:uppercase;color:var(--grey3);margin-top:14px;}
 
 /* ── PORTFOLIO GRID — zero gaps, fixed placement ── */
-/*
-  Layout map (3 cols, each row = 380px):
-  ┌──────────────┬───────────┐  row 1-2
-  │  item-1 (LR) │  item-2   │
-  │  2 col × 2r  │  1col×2r  │
-  ├───────┬───────┴───────────┤  row 3-4
-  │item-3 │     item-4        │
-  │1c×2r  │     2col×2r       │
-  ├───────┴──────┬────────────┤  row 5 (revealed)
-  │   item-5     │   item-6   │
-  │  2col × 1r   │  1col × 1r │
-  └──────────────┴────────────┘
-*/
 /* ═══════════════════════════════════════════
    PREMIUM GALLERY — FEATURED WORK
 ═══════════════════════════════════════════ */
@@ -623,7 +689,6 @@ ul{list-style:none;}
 .cat-card{
   position:relative;overflow:hidden;
   cursor:pointer;background:#0a0a0a;
-  /* will-change removed from base — applied only on hover to avoid 6x compositor layers */
 }
 
 /* Image */
@@ -668,9 +733,6 @@ ul{list-style:none;}
   transition:color .4s ease;
 }
 .cat-card:hover .cat-index{ color:var(--gold); }
-
-/* Gold thin top-edge accent line */
-.cat-card::before{ /* repurposed — keep gradient */ }
 
 .cat-info-text{flex:1;min-width:0;}
 .cat-info-text h3{
@@ -831,7 +893,7 @@ ul{list-style:none;}
 .footer-bottom .gold-link{color:var(--gold);transition:color .3s ease;}
 .footer-bottom .gold-link:hover{color:var(--pure);}
 
-/* SECTION BACKGROUNDS — all deep dark with subtle luxury texture */
+/* SECTION BACKGROUNDS */
 #about{
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(201,169,110,.04) 0%, transparent 60%),
@@ -867,8 +929,6 @@ ul{list-style:none;}
     url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=65&fm=webp');
   background-size:cover;background-position:center top;background-attachment:scroll;position:relative;
 }
-/* Subtle left-side dark gradient so left text is always readable,
-   right side stays slightly brighter to show the image */
 #contact::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(100deg,
@@ -923,20 +983,14 @@ ul{list-style:none;}
    PREMIUM GLOBAL UPGRADES
 ────────────────────────────────────────────── */
 
-/* Page-level smooth scroll handled by JS scrollIntoView to avoid LCP penalty */
-/* html { scroll-behavior: smooth; } */
-
-/* Subtle grain overlay for depth */
 body::after {
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   opacity:.022;mix-blend-mode:overlay;
 }
 
-/* Section divider gold glow lines — all sections */
 section::before { transition: opacity .6s ease; }
 
-/* Service card: lift + gold accent on hover */
 .svc-card {
   transition: transform .5s cubic-bezier(0.22,1,0.36,1),
               box-shadow .5s cubic-bezier(0.22,1,0.36,1),
@@ -947,7 +1001,6 @@ section::before { transition: opacity .6s ease; }
   box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(201,169,110,.12);
 }
 
-/* Testimonial cards: smoother lift */
 .testi-card {
   transition: transform .5s cubic-bezier(0.22,1,0.36,1),
               box-shadow .5s cubic-bezier(0.22,1,0.36,1),
@@ -958,14 +1011,12 @@ section::before { transition: opacity .6s ease; }
   box-shadow: 0 28px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(201,169,110,.15);
 }
 
-/* Contact method cards: smoother */
 .c-method {
   transition: transform .45s cubic-bezier(0.22,1,0.36,1),
               border-color .4s ease, background .4s ease;
 }
 .c-method:hover { transform: translateX(6px); }
 
-/* Button shimmer + scale microinteraction */
 .btn {
   transition: transform .35s cubic-bezier(0.22,1,0.36,1),
               background .4s ease, color .4s ease, box-shadow .4s ease;
@@ -973,14 +1024,12 @@ section::before { transition: opacity .6s ease; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
 .btn:active { transform: translateY(0); }
 
-/* Socials lift */
 .socials a {
   transition: transform .35s cubic-bezier(0.22,1,0.36,1),
               border-color .35s ease, color .35s ease;
 }
 .socials a:hover { transform: translateY(-4px); }
 
-/* About image wrap: lift */
 .about-img-wrap {
   transition: transform .6s cubic-bezier(0.22,1,0.36,1),
               box-shadow .6s ease;
@@ -990,7 +1039,6 @@ section::before { transition: opacity .6s ease; }
   box-shadow: 0 32px 70px rgba(0,0,0,.5);
 }
 
-/* Stats numbers: smooth color pulse on hover */
 .stat-item {
   transition: transform .4s cubic-bezier(0.22,1,0.36,1);
 }
@@ -1000,14 +1048,11 @@ section::before { transition: opacity .6s ease; }
    PERFORMANCE OPTIMIZATIONS
 ═══════════════════════════════════════════ */
 
-/* Parallax will-change: desktop only (saves compositor memory on mobile) */
 @media(min-width:1025px){
   .cta-parallax img,
   .stats-parallax-bg img { will-change:transform; }
-  /* cat-card hover will-change already added above */
 }
 
-/* content-visibility: speed up initial render of below-fold sections */
 #services,
 #portfolio,
 #journal,
@@ -1019,25 +1064,19 @@ section::before { transition: opacity .6s ease; }
   contain-intrinsic-size: 0 600px;
 }
 
-/* Reduce backdrop-filter layers on mobile — main perf killer */
 @media(max-width:768px){
   .testi-card { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .c-method    { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .cat-btn     { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .blog-tag    { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .contact-form-glass { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  /* Keep navbar blur — it's the visible one; kill others */
   .svc-card::after { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  /* Reduce heavy gradient overlays cost */
   .gp-backdrop { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-  /* Skip heavy grain animation on mobile */
   body::after { display: none; }
 }
 
-/* Tap highlight — remove default iOS blue flash, use consistent style */
 * { -webkit-tap-highlight-color: rgba(201,169,110,0.15); }
 
-/* font-display:swap fallback for system fonts during load */
 body { font-family: var(--font-body), system-ui, -apple-system, sans-serif; }
 h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 @media(max-width:1024px){
@@ -1101,7 +1140,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
    PREMIUM MULTI-CARD GALLERY — STYLES
 ═══════════════════════════════════════════ */
 
-/* Backdrop */
 .gp-backdrop{
   position:fixed;inset:0;background:rgba(0,0,0,0);
   backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);
@@ -1115,7 +1153,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
 }
 
-/* Slide-up panel */
 .gp-panel{
   position:fixed;inset:0;z-index:8100;
   display:flex;flex-direction:column;
@@ -1127,7 +1164,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 }
 .gp-panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
 
-/* Header */
 .gp-header{
   display:flex;align-items:flex-end;justify-content:space-between;
   padding:36px 56px 28px;
@@ -1159,7 +1195,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   transform:rotate(90deg);
 }
 
-/* Track wrapper — drag surface */
 .gp-track-wrap{
   flex:1;overflow:hidden;position:relative;
   padding:44px 56px 28px;
@@ -1168,7 +1203,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 .gp-track-wrap.dragging{cursor:grabbing;}
 .gp-track-wrap.dragging *{pointer-events:none;}
 
-/* Horizontal card track */
 .gp-track{
   display:flex;gap:18px;
   height:100%;
@@ -1178,7 +1212,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   transition:transform .05s linear;
 }
 
-/* Project card */
 .gp-card{
   position:relative;overflow:hidden;
   border-radius:10px;
@@ -1193,12 +1226,10 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   box-shadow:0 8px 32px rgba(0,0,0,.55);
   will-change:transform,filter;
 }
-/* Dim non-hovered siblings */
 .gp-track:hover .gp-card:not(:hover){
   filter:brightness(.52) saturate(.65);
   transform:scale(.965);
 }
-/* Hovered card enlarges */
 .gp-track .gp-card:hover{
   transform:scale(1.045) translateY(-8px);
   box-shadow:0 32px 80px rgba(0,0,0,.75), 0 0 0 1px rgba(201,169,110,.22);
@@ -1212,7 +1243,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 }
 .gp-card:hover img{transform:scale(1.07);}
 
-/* Card hover overlay */
 .gp-card-overlay{
   position:absolute;inset:0;
   background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.82) 100%);
@@ -1232,7 +1262,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 .gp-card-name{
   font-family:var(--font-head);font-size:1rem;color:#fff;font-weight:400;line-height:1.2;
 }
-/* Gold top-bar accent */
 .gp-card::after{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--gold),transparent);
@@ -1241,7 +1270,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 }
 .gp-card:hover::after{opacity:1;transform:scaleX(1);}
 
-/* Scroll hint */
 .gp-hint{
   display:flex;align-items:center;gap:16px;
   padding:14px 56px 24px;flex-shrink:0;
@@ -1250,7 +1278,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 .gp-hint span{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);}
 .gp-hint-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,169,110,.3),transparent);}
 
-/* ── Lightbox ── */
 .gp-lb{
   position:fixed;inset:0;z-index:9500;
   background:rgba(0,0,0,.97);
@@ -1290,7 +1317,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   color:rgba(255,255,255,.4);white-space:nowrap;
 }
 
-/* ── Responsive ── */
 @media(max-width:900px){
   .gp-header{padding:24px 28px 20px;}
   .gp-track-wrap{padding:28px 28px 16px;}
@@ -1342,7 +1368,6 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <!-- HERO with Video -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
   <div class="hero-video">
-    <!-- Video background — poster is LCP element, sized for mobile first -->
     <video autoplay muted loop playsinline
       poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp"
       aria-hidden="true" title="Arch X Interior Studio showcase video" width="1800" height="1012">
@@ -1365,6 +1390,22 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
     <div class="hero-scroll-line" aria-hidden="true"></div>
   </div>
 </section>
+
+<!-- INSTAGRAM CTA STRIP -->
+<div class="insta-cta-strip" aria-label="Follow Arch X Interior Studio on Instagram">
+  <div class="container insta-cta-inner">
+    <div class="insta-cta-left">
+      <span class="insta-cta-icon" aria-hidden="true"><i class="fab fa-instagram"></i></span>
+      <div>
+        <p class="insta-cta-handle">@archx.interior</p>
+        <p class="insta-cta-sub">Follow us for daily design inspiration &amp; behind-the-scenes</p>
+      </div>
+    </div>
+    <a href="https://www.instagram.com/archx.interior?igsh=dXFlNmdveTZuZDV1" target="_blank" rel="noopener noreferrer" class="btn insta-cta-btn" aria-label="Follow Arch X on Instagram">
+      Follow on Instagram <i class="fab fa-instagram" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
 
 <!-- ABOUT -->
 <section id="about" class="sp" aria-labelledby="about-heading">
@@ -1768,7 +1809,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
           <div itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
             <h4>Location</h4>
-            <p><span itemprop="streetAddress">YOUR STREET ADDRESS</span>, <span itemprop="addressLocality">Bengaluru</span>, <span itemprop="addressRegion">Karnataka</span> <span itemprop="postalCode">560XXX</span></p>
+            <p><span itemprop="streetAddress">72, SM Kalyanamantapa Rd, Jarganahalli, JP Nagar Phase 6, J. P. Nagar</span>, <span itemprop="addressLocality">Bengaluru</span>, <span itemprop="addressRegion">Karnataka</span> <span itemprop="postalCode">560078</span></p>
           </div>
         </div>
         <div class="c-method">
@@ -1782,7 +1823,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <i class="fas fa-phone-alt" aria-hidden="true"></i>
           <div>
             <h4>Phone</h4>
-            <p><a href="tel:+918748825038" itemprop="telephone">+91 87488 25038</a></p>
+            <p><a href="tel:+916383899602" itemprop="telephone">+91 63838 99602</a></p>
           </div>
         </div>
         <div class="c-method">
@@ -1815,7 +1856,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <p>A premier luxury interior design studio in Bengaluru creating spaces that define you. Precision, elegance, modern living.</p>
           <div class="socials">
             <a href="https://www.instagram.com/archx.interior?igsh=dXFlNmdveTZuZDV1" target="_blank" rel="noopener noreferrer" aria-label="Follow Arch X Interior Studio on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-            <a href="tel:+918748825038" aria-label="Call Arch X Interior Studio"><i class="fas fa-phone-alt" aria-hidden="true"></i></a>
+            <a href="tel:+916383899602" aria-label="Call Arch X Interior Studio"><i class="fas fa-phone-alt" aria-hidden="true"></i></a>
             <a href="mailto:arch.xecture@gmail.com" aria-label="Email Arch X Interior Studio"><i class="fas fa-envelope" aria-hidden="true"></i></a>
             <a href="https://wa.me/916383899602" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
           </div>
@@ -1845,7 +1886,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <div class="f-col reveal from-bottom delay-3">
           <h3 class="f-col-heading">Contact</h3>
           <ul>
-            <li><a href="tel:+918748825038"><i class="fas fa-phone-alt" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>+91 87488 25038</a></li>
+            <li><a href="tel:+916383899602"><i class="fas fa-phone-alt" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>+91 63838 99602</a></li>
             <li><a href="mailto:arch.xecture@gmail.com"><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>arch.xecture@gmail.com</a></li>
             <li><a href="https://wa.me/916383899602" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>Chat on WhatsApp</a></li>
             <li><a href="#contact"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>Bengaluru, Karnataka</a></li>
