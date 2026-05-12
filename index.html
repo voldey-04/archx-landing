@@ -168,7 +168,7 @@
 }
 </script>
 <style>
-/* Font display swap — show system fonts immediately while web fonts load */
+/* Font display swap — system fonts show immediately while web fonts load */
 @font-face {
   font-family: 'Cormorant Garamond';
   font-display: swap;
@@ -179,9 +179,20 @@
   font-display: swap;
   src: local('system-ui'), local('-apple-system');
 }
+/* Font Awesome icons: swap prevents invisible icon flash */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-display: block;
+  src: local('Font Awesome 6 Free');
+}
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-display: block;
+  src: local('Font Awesome 6 Brands');
+}
 :root{
   --black:#060606;--black2:#0e0e0e;--black3:#141414;
-  --grey1:#1f1f1f;--grey2:#2a2a2a;--grey3:#555555;--grey4:#888888;--grey5:#bbbbbb;
+  --grey1:#1f1f1f;--grey2:#2a2a2a;--grey3:#8a8a8a;--grey4:#a8a8a8;--grey5:#bbbbbb;
   --white:#f0f0f0;--pure:#ffffff;
   --gold:#C9A96E;--gold-dim:#8a7348;
   --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
@@ -801,7 +812,7 @@ ul{list-style:none;}
 .socials a>*{position:relative;z-index:1;}
 .socials a:hover{border-color:var(--gold);color:var(--black);}
 .socials a:hover::before{transform:translateY(0);}
-.f-col h5{font-family:var(--font-body);font-size:.74rem;letter-spacing:3px;text-transform:uppercase;color:var(--grey3);margin-bottom:26px;}
+.f-col h5,.f-col-heading{font-family:var(--font-body);font-size:.74rem;letter-spacing:3px;text-transform:uppercase;color:var(--grey3);margin-bottom:26px;font-weight:400;}
 .f-col ul li{margin-bottom:14px;}
 .f-col ul a{color:var(--grey4);font-size:.9rem;position:relative;display:inline-block;transition:all .3s ease;}
 .f-col ul a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s ease;}
@@ -1531,17 +1542,17 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
      PREMIUM MULTI-CARD GALLERY PANEL
 ═══════════════════════════════════════════ -->
 <div class="gp-backdrop" id="gpBackdrop"></div>
-<div class="gp-panel" id="gpPanel" role="dialog" aria-modal="true" aria-label="Image Gallery">
+<div class="gp-panel" id="gpPanel" role="dialog" aria-modal="true" aria-labelledby="gpTitle">
 
   <!-- Panel header -->
   <div class="gp-header">
     <div class="gp-header-left">
       <span class="gp-label" id="gpLabel">Category</span>
-      <h2 class="gp-title" id="gpTitle">Gallery</h2>
+      <h3 class="gp-title" id="gpTitle">Gallery</h3>
     </div>
     <div class="gp-header-right">
       <span class="gp-count" id="gpCount">— / —</span>
-      <button class="gp-close" id="gpClose" aria-label="Close"><i class="fas fa-times"></i></button>
+      <button class="gp-close" id="gpClose" aria-label="Close gallery"><i class="fas fa-times" aria-hidden="true"></i></button>
     </div>
   </div>
 
@@ -1559,9 +1570,9 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   <!-- Lightbox overlay (single image zoom) -->
   <div class="gp-lb" id="gpLb">
     <img src="" alt="" id="gpLbImg">
-    <button class="gp-lb-close" id="gpLbClose"><i class="fas fa-times"></i></button>
-    <button class="gp-lb-prev" id="gpLbPrev"><i class="fas fa-chevron-left"></i></button>
-    <button class="gp-lb-next" id="gpLbNext"><i class="fas fa-chevron-right"></i></button>
+    <button class="gp-lb-close" id="gpLbClose" aria-label="Close image"><i class="fas fa-times"></i></button>
+    <button class="gp-lb-prev" id="gpLbPrev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
+    <button class="gp-lb-next" id="gpLbNext" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
     <div class="gp-lb-caption" id="gpLbCaption"></div>
   </div>
 
@@ -1715,7 +1726,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
     </div>
     <div class="blog-modal-content">
       <span class="blog-modal-tag" id="blogModalTag"></span>
-      <h2 id="blogModalTitle"></h2>
+      <h2 id="blogModalTitle" tabindex="-1"></h2>
       <div class="blog-modal-meta">
         <span id="blogModalDate"></span>
         <span id="blogModalTime"></span>
@@ -1810,7 +1821,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           </div>
         </div>
         <nav class="f-col reveal from-bottom delay-1" aria-label="Footer navigation">
-          <h5>Navigate</h5>
+          <h3 class="f-col-heading">Navigate</h3>
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -1822,7 +1833,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           </ul>
         </nav>
         <nav class="f-col reveal from-bottom delay-2" aria-label="Services navigation">
-          <h5>Services</h5>
+          <h3 class="f-col-heading">Services</h3>
           <ul>
             <li><a href="#services">Residential</a></li>
             <li><a href="#services">Commercial</a></li>
@@ -1832,7 +1843,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           </ul>
         </nav>
         <div class="f-col reveal from-bottom delay-3">
-          <h5>Contact</h5>
+          <h3 class="f-col-heading">Contact</h3>
           <ul>
             <li><a href="tel:+918748825038"><i class="fas fa-phone-alt" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>+91 87488 25038</a></li>
             <li><a href="mailto:arch.xecture@gmail.com"><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px;font-size:.75rem;" aria-hidden="true"></i>arch.xecture@gmail.com</a></li>
@@ -1903,23 +1914,36 @@ const sectionObs = new IntersectionObserver((entries)=>{
 },{threshold:0.3, rootMargin:'-10% 0px -70% 0px'});
 sections.forEach(s=>sectionObs.observe(s));
 
-/* PARALLAX — desktop only (mobile: fixed background-attachment causes scroll jank) */
+/* PARALLAX — desktop only, getBoundingClientRect cached on load/resize to eliminate forced reflow */
 const pxItems=[
   {wrap:document.querySelector('.cta-parallax'),img:document.querySelector('#ctaParallax img'),speed:0.25},
 ];
 const isMobileDevice = () => window.innerWidth <= 1024 || navigator.maxTouchPoints > 0;
+let pxCache=[], pxTicking=false;
+function cachePxRects(){
+  pxCache=pxItems.map(({wrap,img,speed})=>({
+    img, speed,
+    top: wrap ? wrap.getBoundingClientRect().top + window.scrollY : 0,
+    height: wrap ? wrap.offsetHeight : 0
+  }));
+}
 function applyParallax(){
-  if(isMobileDevice()) return;
-  const sy=window.scrollY;
-  pxItems.forEach(({wrap,img,speed})=>{
-    if(!wrap||!img)return;
-    const r=wrap.getBoundingClientRect();
-    if(r.bottom<0||r.top>window.innerHeight)return;
-    const off=(sy+r.top)*speed*.4;
-    img.style.transform=`translateY(${off}px)`;
+  if(isMobileDevice()||pxTicking) return;
+  pxTicking=true;
+  requestAnimationFrame(()=>{
+    const sy=window.scrollY, vh=window.innerHeight;
+    pxCache.forEach(({img,speed,top,height})=>{
+      if(!img) return;
+      if(top+height<sy||top>sy+vh){ pxTicking=false; return; }
+      const off=(sy-top+vh)*speed*0.18;
+      img.style.transform=`translateY(${off}px)`;
+    });
+    pxTicking=false;
   });
 }
 if(!isMobileDevice()){
+  cachePxRects();
+  window.addEventListener('resize',cachePxRects,{passive:true});
   window.addEventListener('scroll',applyParallax,{passive:true});
   applyParallax();
 }
