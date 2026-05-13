@@ -2009,13 +2009,26 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 
 <script>
 /* PRELOADER */
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    const pl=document.getElementById('preloader');
-    pl.classList.add('done');
-    setTimeout(()=>pl.remove(),600);
-  },1000);
-});
+(function(){
+  const pl = document.getElementById('preloader');
+  const startTime = Date.now();
+  const MIN_SHOW = 1800;
+
+  function dismiss(){
+    const elapsed = Date.now() - startTime;
+    const delay = Math.max(0, MIN_SHOW - elapsed);
+    setTimeout(function(){
+      pl.classList.add('done');
+      setTimeout(function(){ if(pl && pl.parentNode) pl.remove(); }, 800);
+    }, delay);
+  }
+
+  if(document.readyState === 'complete'){
+    dismiss();
+  } else {
+    window.addEventListener('load', dismiss, { once: true });
+  }
+})();
 
 /* NAVBAR */
 window.addEventListener('scroll',()=>{
@@ -2556,5 +2569,7 @@ document.addEventListener('keydown', e => {
   },{passive:true});
 })();
 
-
+})();
+</script>
+</body>
 </html>
