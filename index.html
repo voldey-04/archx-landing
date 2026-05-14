@@ -61,13 +61,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<!-- Preload LCP hero poster — correct srcset so BOTH desktop (1400w @70q) and mobile (480w/800w) get the right asset -->
+<!-- ── DEVICE-SPECIFIC LCP PRELOADS ──────────────────────────────────
+     Each preload fires ONLY on its matching viewport.
+     Mobile (≤767px)  → 480w compressed poster
+     Tablet (768–1024) → 800w mid-quality poster
+     Desktop (≥1025px) → 1400w premium poster
+     No device downloads the other's asset.
+─────────────────────────────────────────────────────────────────── -->
 <link rel="preload" as="image"
-  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=72&fm=webp"
-  imagesrcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=60&fm=webp 480w,
-               https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=65&fm=webp 800w,
-               https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=72&fm=webp 1400w"
-  imagesizes="100vw"
+  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp&auto=format"
+  media="(max-width: 767px)"
+  fetchpriority="high">
+<link rel="preload" as="image"
+  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=65&fm=webp&auto=format"
+  media="(min-width: 768px) and (max-width: 1024px)"
+  fetchpriority="high">
+<link rel="preload" as="image"
+  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=80&fm=webp&auto=format"
+  media="(min-width: 1025px)"
   fetchpriority="high">
 <!-- Fonts: non-render-blocking via media swap trick -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -560,10 +571,34 @@ ul{list-style:none;}
 .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
 .hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
 
-/* HERO with Video */
+/* HERO */
 .hero{height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;}
 .hero-video{position:absolute;inset:0;z-index:0;}
-.hero-video video{width:100%;height:100%;object-fit:cover;transform:scale(1.02);}
+
+/* ── DEVICE-SPECIFIC HERO MEDIA ──────────────────────────────────────
+   Desktop (≥1025px): video visible, picture hidden
+   Mobile/Tablet (≤1024px): picture visible, video hidden + no download
+──────────────────────────────────────────────────────────────────── */
+.hero-picture { display:none; width:100%; height:100%; position:absolute; inset:0; }
+.hero-picture img { width:100%; height:100%; object-fit:cover; transform:scale(1.02); }
+.hero-vid { width:100%; height:100%; object-fit:cover; transform:scale(1.02); }
+
+/* Mobile/Tablet: show picture, suppress video rendering */
+@media(max-width:1024px){
+  .hero-picture { display:block; }
+  .hero-vid {
+    display:none;
+    /* Belt-and-suspenders: even if display:none doesn't stop download,
+       the JS below removes <source> before the video can fetch */
+  }
+}
+/* Desktop: show video, hide picture */
+@media(min-width:1025px){
+  .hero-picture { display:none !important; }
+  .hero-vid { display:block; }
+}
+
+/* ── END DEVICE-SPECIFIC HERO MEDIA ─────────────────────────────── */
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,6,6,.92) 0%,rgba(6,6,6,.65) 50%,rgba(6,6,6,.35) 100%);z-index:1;}
 .hero-vignette{position:absolute;inset:0;box-shadow:inset 0 0 200px rgba(0,0,0,.6);z-index:1;pointer-events:none;}
 .hero-content{position:relative;z-index:2;max-width:780px;}
@@ -1052,7 +1087,6 @@ ul{list-style:none;}
 
 /* ── Performance: containment & will-change ── */
 .cat-card{ contain:layout style; }
-.hero-video video{ will-change:transform; }
 .about-img-wrap img{ will-change:transform,filter; }
 .svc-card{ contain:layout style; }
 
@@ -1144,14 +1178,31 @@ section::before { transition: opacity .6s ease; }
 @media(min-width:1025px){
   .cta-parallax img,
   .stats-parallax-bg img { will-change:transform; }
+  .hero-vid { will-change:transform; }
 }
 
-#portfolio,
-#journal,
-.cta-section,
-.footer-top {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 800px;
+/* Desktop: only deep-scroll sections deferred */
+@media(min-width:1025px){
+  #portfolio,
+  #journal,
+  .cta-section,
+  .footer-top {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 800px;
+  }
+}
+/* Mobile/Tablet: defer more aggressively — smaller viewports scroll past these later */
+@media(max-width:1024px){
+  #services,
+  #portfolio,
+  #journal,
+  .testi-section,
+  .cta-section,
+  #contact,
+  .footer-top {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 600px;
+  }
 }
 
 @media(max-width:768px){
@@ -1165,7 +1216,6 @@ section::before { transition: opacity .6s ease; }
   body::after { display: none; }
   /* Free GPU layers on mobile that aren't needed */
   .about-img-wrap img { will-change: auto; }
-  .hero-video video { will-change: auto; }
 }
 
 * { -webkit-tap-highlight-color: rgba(201,169,110,0.15); }
@@ -1756,12 +1806,46 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 
 <main id="main-content">
 
-<!-- HERO with Video -->
+<!-- HERO with Device-Specific Media -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
-  <div class="hero-video">
-    <video autoplay muted loop playsinline
-      poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=72&fm=webp"
-      aria-hidden="true" title="Arch X Interior Studio showcase video" width="1800" height="1012"
+  <div class="hero-video" id="heroMedia">
+    <!--
+      MOBILE/TABLET (≤1024px): Static picture — no video download, fast LCP.
+      DESKTOP (≥1025px):       Video with premium 1400w poster.
+      Switching is done in CSS: .hero-picture hidden on desktop, video hidden on mobile.
+    -->
+
+    <!-- Static hero image — shown on mobile/tablet, hidden on desktop -->
+    <picture class="hero-picture" aria-hidden="true">
+      <!-- Mobile portrait -->
+      <source
+        media="(max-width: 480px)"
+        srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp&auto=format"
+        width="480" height="854">
+      <!-- Mobile landscape / small tablet -->
+      <source
+        media="(max-width: 767px)"
+        srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=768&q=60&fm=webp&auto=format"
+        width="768" height="1080">
+      <!-- Tablet -->
+      <source
+        media="(max-width: 1024px)"
+        srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1024&q=65&fm=webp&auto=format"
+        width="1024" height="768">
+      <!-- Fallback (desktop — this source never fires on desktop because CSS hides .hero-picture there) -->
+      <img
+        src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=768&q=60&fm=webp&auto=format"
+        alt="Luxury interior design by Arch X Interior Studio, Bengaluru"
+        width="768" height="1080"
+        fetchpriority="high"
+        decoding="async">
+    </picture>
+
+    <!-- Video — shown on desktop only, hidden on mobile/tablet via CSS -->
+    <video class="hero-vid" autoplay muted loop playsinline
+      poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=80&fm=webp&auto=format"
+      aria-hidden="true" title="Arch X Interior Studio showcase video"
+      width="1800" height="1012"
       fetchpriority="high">
       <source src="hero-video.mp4" type="video/mp4">
     </video>
@@ -1807,7 +1891,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
            srcset="https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=700&q=82&fm=webp 700w,
                    https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=1000&q=87&fm=webp 1000w,
                    https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=1400&q=90&fm=webp 1400w"
-           sizes="(max-width:900px) 100vw, 50vw"
+           sizes="(max-width:900px) 100vw, 46vw"
            alt="Arch X Interior Studio — award-winning luxury interior design project in Bengaluru"
            width="1400" height="1240" loading="lazy" decoding="async">
 
@@ -1882,7 +1966,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <span class="cat-index" aria-hidden="true">01</span>
         <img src="images/Living/living (1).webp"
              alt="Luxury living room interior design by Arch X Studio, Bengaluru"
-             loading="lazy" decoding="async" width="600" height="360">
+             loading="lazy" decoding="async" width="600" height="360"
+             sizes="(max-width:768px) 76vw, (max-width:1024px) 33vw, 30vw">
         <div class="cat-info">
           <div class="cat-info-text">
             <h3>Living Room Interiors</h3>
@@ -1898,7 +1983,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <span class="cat-index" aria-hidden="true">02</span>
         <img src="images/Kitchen/kitchen (1).webp"
              alt="Premium modular kitchen interior design Bengaluru — Arch X Studio"
-             loading="lazy" decoding="async" width="600" height="360">
+             loading="lazy" decoding="async" width="600" height="360"
+             sizes="(max-width:768px) 76vw, (max-width:1024px) 33vw, 30vw">
         <div class="cat-info">
           <div class="cat-info-text">
             <h3>Kitchen Interiors</h3>
@@ -1914,7 +2000,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <span class="cat-index" aria-hidden="true">03</span>
         <img src="images/Bedroom/bedroom (1).webp"
              alt="Luxury bedroom interior design with custom wardrobe — Arch X Studio Bengaluru"
-             loading="lazy" decoding="async" width="600" height="360">
+             loading="lazy" decoding="async" width="600" height="360"
+             sizes="(max-width:768px) 76vw, (max-width:1024px) 33vw, 30vw">
         <div class="cat-info">
           <div class="cat-info-text">
             <h3>Bedroom Interiors</h3>
@@ -1930,7 +2017,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <span class="cat-index" aria-hidden="true">04</span>
         <img src="images/Dining/dining (1).webp"
              alt="Elegant dining room interior design Bengaluru — Arch X Studio"
-             loading="lazy" decoding="async" width="600" height="360">
+             loading="lazy" decoding="async" width="600" height="360"
+             sizes="(max-width:768px) 76vw, (max-width:1024px) 33vw, 30vw">
         <div class="cat-info">
           <div class="cat-info-text">
             <h3>Dining Interiors</h3>
@@ -1946,7 +2034,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <span class="cat-index" aria-hidden="true">05</span>
         <img src="images/Toilet/toilet (1).webp"
              alt="Modern luxury bathroom interior design with premium fittings — Arch X Studio Bengaluru"
-             loading="lazy" decoding="async" width="600" height="360">
+             loading="lazy" decoding="async" width="600" height="360"
+             sizes="(max-width:768px) 76vw, (max-width:1024px) 33vw, 30vw">
         <div class="cat-info">
           <div class="cat-info-text">
             <h3>Bathroom Interiors</h3>
@@ -1962,7 +2051,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
         <span class="cat-index" aria-hidden="true">06</span>
         <img src="images/Balcony/balcony (1).webp"
              alt="Premium balcony and outdoor terrace design Bengaluru — Arch X Studio"
-             loading="lazy" decoding="async" width="600" height="360">
+             loading="lazy" decoding="async" width="600" height="360"
+             sizes="(max-width:768px) 76vw, (max-width:1024px) 33vw, 30vw">
         <div class="cat-info">
           <div class="cat-info-text">
             <h3>Balcony Interiors</h3>
@@ -2327,9 +2417,23 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <script>
 /* PRELOADER */
 (function(){
+  /* ── Mobile video suppression: remove <source> BEFORE browser queues video download ── */
+  if(window.innerWidth <= 1024 || navigator.maxTouchPoints > 1){
+    var vid = document.querySelector('.hero-vid');
+    if(vid){
+      /* Remove all source elements */
+      var sources = vid.querySelectorAll('source');
+      sources.forEach(function(s){ s.parentNode.removeChild(s); });
+      /* Clear any src that may have been set */
+      vid.removeAttribute('src');
+      vid.load(); /* reset the media element — cancels pending fetch */
+    }
+  }
+
   const pl = document.getElementById('preloader');
   const startTime = Date.now();
-  const MIN_SHOW = 800;
+  const isMob = window.innerWidth <= 1024 || navigator.maxTouchPoints > 1;
+  const MIN_SHOW = isMob ? 600 : 800;
 
   function dismiss(){
     const elapsed = Date.now() - startTime;
