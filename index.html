@@ -30,6 +30,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#060606">
+<meta name="color-scheme" content="dark">
+<!-- Critical inline style: paint body background immediately, before any CSS loads -->
+<style>html,body{background:#060606;color:#f0f0f0;}</style>
 
 <!-- ═══════════════════════════════════════
      OPEN GRAPH (Facebook / LinkedIn)
@@ -61,12 +64,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<!-- Preload LCP hero poster — mobile-optimised (biggest LCP fix) -->
-<link rel="preload" as="image" href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp" imagesrcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp 480w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp 800w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=70&fm=webp 1400w" imagesizes="100vw" fetchpriority="high">
+<!-- Preconnect to Unsplash CDN — all hero and content images are served from here -->
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="dns-prefetch" href="https://images.unsplash.com">
+<!-- Preload LCP: mobile poster (static img — biggest LCP fix) -->
+<link rel="preload" as="image"
+  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp"
+  imagesrcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp 480w,
+               https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp 800w"
+  imagesizes="100vw"
+  media="(max-width:768px)"
+  fetchpriority="high">
+<!-- Preload LCP: desktop poster (before video streams) -->
+<link rel="preload" as="image"
+  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=70&fm=webp"
+  media="(min-width:769px)"
+  fetchpriority="high">
 <!-- Fonts: non-render-blocking via media swap trick -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400&display=swap" rel="stylesheet"></noscript>
 <!-- Font Awesome: non-render-blocking -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
@@ -221,8 +238,16 @@ ul{list-style:none;}
   background-image:
     radial-gradient(ellipse at 30% 70%, rgba(201,169,110,.04) 0%, transparent 60%),
     radial-gradient(ellipse at 85% 15%, rgba(201,169,110,.03) 0%, transparent 55%),
-    url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=65&fm=webp');
+    url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=480&q=50&fm=webp');
   background-size:cover;background-position:center;background-attachment:scroll;position:relative;
+}
+@media(min-width:769px){
+  #journal{
+    background-image:
+      radial-gradient(ellipse at 30% 70%, rgba(201,169,110,.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 85% 15%, rgba(201,169,110,.03) 0%, transparent 55%),
+      url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=65&fm=webp');
+  }
 }
 #journal::before{content:'';position:absolute;inset:0;background:linear-gradient(150deg,rgba(4,4,4,.98) 0%,rgba(8,8,8,.97) 50%,rgba(5,5,5,.98) 100%);z-index:0;pointer-events:none;}
 #journal>.container{position:relative;z-index:1;}
@@ -452,7 +477,7 @@ ul{list-style:none;}
   position:fixed;inset:0;background:var(--black);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   z-index:9999;
-  transition:opacity .9s var(--ease2);
+  transition:opacity .4s var(--ease2);
   gap:0;
 }
 .preloader.done{opacity:0;pointer-events:none;}
@@ -551,6 +576,19 @@ ul{list-style:none;}
 .hero{height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;}
 .hero-video{position:absolute;inset:0;z-index:0;}
 .hero-video video{width:100%;height:100%;object-fit:cover;transform:scale(1.02);}
+/* Mobile: show static poster, hide video to prevent MP4 download */
+.hero-poster-mobile{
+  display:none;
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+}
+@media(max-width:768px){
+  .hero-poster-mobile{ display:block; }
+  .hero-video video{ display:none; }
+}
+@media(min-width:769px){
+  .hero-poster-mobile{ display:none !important; }
+}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,6,6,.92) 0%,rgba(6,6,6,.65) 50%,rgba(6,6,6,.35) 100%);z-index:1;}
 .hero-vignette{position:absolute;inset:0;box-shadow:inset 0 0 200px rgba(0,0,0,.6);z-index:1;pointer-events:none;}
 .hero-content{position:relative;z-index:2;max-width:780px;}
@@ -746,7 +784,9 @@ ul{list-style:none;}
   filter:brightness(.68) saturate(.75);
   transition:transform 1.4s cubic-bezier(0.22,1,0.36,1),
              filter .8s ease;
-  will-change:transform,filter;
+}
+@media(min-width:769px){
+  .cat-card img{ will-change:transform,filter; }
 }
 
 /* Always-visible dark gradient base */
@@ -900,10 +940,16 @@ ul{list-style:none;}
   padding:90px 0 55px;
   position:relative;
   background-image:
-    url('https://images.unsplash.com/photo-1536895058696-a69b1c7ba34f?w=1200&q=65&fm=webp');
+    url('https://images.unsplash.com/photo-1536895058696-a69b1c7ba34f?w=480&q=50&fm=webp');
   background-size:cover;
   background-position:center;
   background-attachment:scroll;
+}
+@media(min-width:769px){
+  .footer-top{
+    background-image:
+      url('https://images.unsplash.com/photo-1536895058696-a69b1c7ba34f?w=1200&q=65&fm=webp');
+  }
 }
 .footer-top::before{
   content:'';position:absolute;inset:0;
@@ -947,12 +993,21 @@ ul{list-style:none;}
 .footer-bottom .gold-link:hover{color:var(--pure);}
 
 /* SECTION BACKGROUNDS */
+/* SECTION BACKGROUNDS — desktop gets full res, mobile gets 480w to reduce bandwidth */
 #about{
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(201,169,110,.04) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 20%, rgba(201,169,110,.03) 0%, transparent 55%),
-    url('https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1200&q=65&fm=webp');
+    url('https://images.unsplash.com/photo-1600210492493-0946911123ea?w=480&q=50&fm=webp');
   background-size:cover;background-position:center;background-attachment:scroll;position:relative;
+}
+@media(min-width:769px){
+  #about{
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(201,169,110,.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(201,169,110,.03) 0%, transparent 55%),
+      url('https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1200&q=65&fm=webp');
+  }
 }
 #about::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(4,4,4,.97) 0%,rgba(8,8,8,.96) 50%,rgba(6,6,6,.97) 100%);z-index:0;pointer-events:none;}
 #about>.container{position:relative;z-index:1;}
@@ -960,8 +1015,15 @@ ul{list-style:none;}
 #services{
   background-image:
     radial-gradient(ellipse at 75% 60%, rgba(201,169,110,.05) 0%, transparent 55%),
-    url('https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?w=1200&q=65&fm=webp');
+    url('https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?w=480&q=50&fm=webp');
   background-size:cover;background-position:center top;background-attachment:scroll;position:relative;
+}
+@media(min-width:769px){
+  #services{
+    background-image:
+      radial-gradient(ellipse at 75% 60%, rgba(201,169,110,.05) 0%, transparent 55%),
+      url('https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?w=1200&q=65&fm=webp');
+  }
 }
 #services::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,6,6,.98) 0%,rgba(10,10,10,.97) 100%);z-index:0;pointer-events:none;}
 #services>.container{position:relative;z-index:1;}
@@ -979,8 +1041,14 @@ ul{list-style:none;}
 
 #contact{
   background-image:
-    url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=65&fm=webp');
+    url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=480&q=50&fm=webp');
   background-size:cover;background-position:center top;background-attachment:scroll;position:relative;
+}
+@media(min-width:769px){
+  #contact{
+    background-image:
+      url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=65&fm=webp');
+  }
 }
 #contact::before{
   content:'';position:absolute;inset:0;
@@ -1010,10 +1078,12 @@ ul{list-style:none;}
   border-color:rgba(201,169,110,.3) !important;
 }
 
-/* ── Performance: containment & will-change ── */
+/* ── Performance: containment — will-change only on elements that actually animate ── */
 .cat-card{ contain:layout style; }
+/* hero video scale is GPU-composited via transform — keep will-change */
 .hero-video video{ will-change:transform; }
-.about-img-wrap img{ will-change:transform,filter; }
+/* Remove will-change from hover-only elements: layers created but never hit on mobile */
+/* .about-img-wrap img — removed: hover animation only, causes GPU memory waste */
 .svc-card{ contain:layout style; }
 
 /* ── Preloader fade: GPU-composited ── */
@@ -1031,6 +1101,15 @@ ul{list-style:none;}
 .delay-3{transition-delay:.45s}
 .delay-4{transition-delay:.6s}
 .delay-5{transition-delay:.75s}
+/* Mobile: faster animations — reduce delay stack that hurts perceived performance */
+@media(max-width:768px){
+  .reveal{transition-duration:.55s;}
+  .delay-1{transition-delay:.08s}
+  .delay-2{transition-delay:.15s}
+  .delay-3{transition-delay:.22s}
+  .delay-4{transition-delay:.28s}
+  .delay-5{transition-delay:.34s}
+}
 
 /* ──────────────────────────────────────────────
    PREMIUM GLOBAL UPGRADES
@@ -1101,10 +1180,7 @@ section::before { transition: opacity .6s ease; }
    PERFORMANCE OPTIMIZATIONS
 ═══════════════════════════════════════════ */
 
-@media(min-width:1025px){
-  .cta-parallax img,
-  .stats-parallax-bg img { will-change:transform; }
-}
+/* will-change applied via JS only during active scroll — not statically */
 
 #services,
 #portfolio,
@@ -1114,7 +1190,7 @@ section::before { transition: opacity .6s ease; }
 #contact,
 .footer-top {
   content-visibility: auto;
-  contain-intrinsic-size: 0 600px;
+  contain-intrinsic-size: auto 0 auto 600px;
 }
 
 @media(max-width:768px){
@@ -1125,10 +1201,25 @@ section::before { transition: opacity .6s ease; }
   .contact-form-glass { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .svc-card::after { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .gp-backdrop { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  /* badge-glass and cta-glass have blur — reduce on mobile */
+  .badge-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .cta-glass   { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  /* Navbar scrolled blur: reduce radius on mobile for perf */
+  .navbar.scrolled { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
   body::after { display: none; }
+  /* Disable hover-lift transforms on mobile — they trigger layout on tap */
+  .svc-card:hover { transform: none; box-shadow: none; }
+  .stat-item:hover { transform: none; }
+  .about-img-wrap:hover { transform: none; box-shadow: none; }
+  .btn:hover { transform: none; box-shadow: none; }
+  .socials a:hover { transform: none; }
 }
 
 * { -webkit-tap-highlight-color: rgba(201,169,110,0.15); }
+/* Eliminate 300ms tap delay on all interactive elements */
+a, button, [role="button"], [tabindex], .cat-card, .blog-card, .btn, .hamburger, .svc-card {
+  touch-action: manipulation;
+}
 
 body { font-family: var(--font-body), system-ui, -apple-system, sans-serif; }
 h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
@@ -1316,6 +1407,8 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   pointer-events:none;
   /* Thin gold rule at top of panel */
   border-top:1px solid rgba(201,169,110,.18);
+  contain:layout style;
+  overscroll-behavior:none;
 }
 .gp-panel.open{transform:translateY(0);opacity:1;pointer-events:auto;}
 
@@ -1688,7 +1781,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 
 <!-- PRELOADER -->
 <div class="preloader" id="preloader">
-  <img src="logo.webp" alt="" class="pl-logo-img" id="plLogoImg"
+  <img src="logo.webp" alt="" class="pl-logo-img" id="plLogoImg" fetchpriority="low"
        onerror="this.style.display='none';document.getElementById('plLogoText').style.display='flex';">
   <div class="pl-logo" id="plLogoText" style="display:none;">ARCH <em>X</em></div>
   <div class="pl-track"><div class="pl-bar"></div></div>
@@ -1698,7 +1791,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <header class="navbar" id="navbar" role="banner">
   <div class="container nav-wrap">
     <a href="/" class="logo" aria-label="Arch X Interior Studio — Home">
-      <img src="logo.webp" alt="" class="logo-img" aria-hidden="true">
+      <img src="logo.webp" alt="" class="logo-img" aria-hidden="true" loading="lazy" decoding="async">
       ARCH <em>X</em>
     </a>
     <nav class="nav-links" id="navLinks" aria-label="Primary navigation">
@@ -1718,8 +1811,20 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <!-- HERO with Video -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
   <div class="hero-video">
-    <video autoplay muted loop playsinline
-      poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp"
+    <!-- Mobile: static poster image painted as LCP element, no video overhead -->
+    <img class="hero-poster-mobile"
+         src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp"
+         srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp 480w,
+                 https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp 800w"
+         sizes="100vw"
+         alt=""
+         aria-hidden="true"
+         fetchpriority="high"
+         decoding="sync"
+         width="800" height="450">
+    <!-- Desktop: video with preload=none so poster paints first, video streams after -->
+    <video autoplay muted loop playsinline preload="none"
+      poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=70&fm=webp"
       aria-hidden="true" title="Arch X Interior Studio showcase video" width="1800" height="1012">
       <source src="hero-video.mp4" type="video/mp4">
     </video>
@@ -2013,7 +2118,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card featured reveal from-left" data-blog="0" tabindex="0" role="button" aria-label="Read: The Living Room That Took Six Months to Get Right">
         <div class="blog-card-img">
           <span class="blog-tag">Living Room</span>
-          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=65&fm=webp"
+          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=65&fm=webp" width="600" height="400"
                alt="Warm modern living room with oak shelving and layered lighting"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -2033,7 +2138,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-right" data-blog="1" tabindex="0" role="button" aria-label="Read: Why We Stopped Recommending White Kitchens">
         <div class="blog-card-img">
           <span class="blog-tag">Kitchen</span>
-          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=65&fm=webp"
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=65&fm=webp" width="600" height="400"
                alt="Dark walnut kitchen with brass fittings and stone countertop"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -2053,7 +2158,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-bottom" data-blog="2" tabindex="0" role="button" aria-label="Read: Light Before Everything Else">
         <div class="blog-card-img">
           <span class="blog-tag">Design Thinking</span>
-          <img src="https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=600&q=65&fm=webp"
+          <img src="https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=600&q=65&fm=webp" width="600" height="400"
                alt="Bedroom with layered warm ambient lighting and linen textures"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -2073,7 +2178,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-left" data-blog="3" tabindex="0" role="button" aria-label="Read: Turning a Bengaluru Balcony into a Third Room">
         <div class="blog-card-img">
           <span class="blog-tag">Balcony</span>
-          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=65&fm=webp"
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=65&fm=webp" width="600" height="400"
                alt="Outdoor balcony with planters, teak flooring and rattan seating"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -2093,7 +2198,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-bottom" data-blog="4" tabindex="0" role="button" aria-label="Read: The Honest Case for Neutral Bedrooms">
         <div class="blog-card-img">
           <span class="blog-tag">Bedroom</span>
-          <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=65&fm=webp"
+          <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=65&fm=webp" width="600" height="400"
                alt="Serene bedroom with taupe tones and textured wall panels"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -2113,7 +2218,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <article class="blog-card reveal from-right" data-blog="5" tabindex="0" role="button" aria-label="Read: What a Dining Room Is Actually For">
         <div class="blog-card-img">
           <span class="blog-tag">Dining</span>
-          <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=600&q=65&fm=webp"
+          <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=600&q=65&fm=webp" width="600" height="400"
                alt="Intimate dining space with pendant lighting and oval table"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
@@ -2226,7 +2331,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <div class="footer-grid">
         <div class="f-brand reveal from-bottom">
           <a href="/" class="logo" style="font-size:1.8rem;" aria-label="Arch X Interior Studio">
-            <img src="logo.webp" alt="" class="logo-img" style="width:40px;height:40px;border-radius:50%;" aria-hidden="true">
+            <img src="logo.webp" alt="" class="logo-img" style="width:40px;height:40px;border-radius:50%;" aria-hidden="true" loading="lazy" decoding="async">
             ARCH <em>X</em>
           </a>
           <p>A premier luxury interior design studio in Bengaluru creating spaces that define you. Precision, elegance, modern living.</p>
@@ -2280,18 +2385,26 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 </footer>
 
 <script>
-/* PRELOADER */
+/* PRELOADER — max 400ms on first visit, instant skip on return */
 (function(){
   const pl = document.getElementById('preloader');
   const startTime = Date.now();
-  const MIN_SHOW = 1800;
+  /* Returning visitors: skip preloader entirely — it only kills LCP */
+  const isReturn = sessionStorage.getItem('ax_visited');
+  if(isReturn){
+    pl.style.display='none';
+    return;
+  }
+  sessionStorage.setItem('ax_visited','1');
+  /* First visit: max 400ms — enough to see brand, not enough to hurt LCP */
+  const MIN_SHOW = 400;
 
   function dismiss(){
     const elapsed = Date.now() - startTime;
     const delay = Math.max(0, MIN_SHOW - elapsed);
     setTimeout(function(){
       pl.classList.add('done');
-      setTimeout(function(){ if(pl && pl.parentNode) pl.remove(); }, 800);
+      setTimeout(function(){ if(pl && pl.parentNode) pl.remove(); }, 500);
     }, delay);
   }
 
@@ -2349,7 +2462,7 @@ const pxItems=[
   {wrap:document.querySelector('.cta-parallax'),img:document.querySelector('#ctaParallax img'),speed:0.25},
 ];
 const isMobileDevice = () => window.innerWidth <= 1024 || navigator.maxTouchPoints > 0;
-let pxCache=[], pxTicking=false;
+let pxCache=[], pxTicking=false, pxScrolling=false, pxScrollTimer;
 function cachePxRects(){
   pxCache=pxItems.map(({wrap,img,speed})=>({
     img, speed,
@@ -2374,15 +2487,34 @@ function applyParallax(){
 if(!isMobileDevice()){
   cachePxRects();
   window.addEventListener('resize',cachePxRects,{passive:true});
-  window.addEventListener('scroll',applyParallax,{passive:true});
+  window.addEventListener('scroll',()=>{
+    /* Apply will-change only while scrolling, release after */
+    if(!pxScrolling){
+      pxScrolling=true;
+      pxCache.forEach(({img})=>{ if(img) img.style.willChange='transform'; });
+    }
+    clearTimeout(pxScrollTimer);
+    pxScrollTimer=setTimeout(()=>{
+      pxScrolling=false;
+      pxCache.forEach(({img})=>{ if(img) img.style.willChange='auto'; });
+    },200);
+    applyParallax();
+  },{passive:true});
   applyParallax();
 }
 
-/* SCROLL REVEAL */
-const revObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
-},{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+/* SCROLL REVEAL — deferred to idle so it doesn't block INP on first interaction */
+function setupReveal(){
+  const revObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+}
+if('requestIdleCallback' in window){
+  requestIdleCallback(setupReveal,{timeout:500});
+} else {
+  setTimeout(setupReveal,100);
+}
 
 
 /* ═══════════════════════════════════════════
