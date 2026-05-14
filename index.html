@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
 
 <!-- ═══════════════════════════════════════
      PRIMARY SEO META
@@ -61,15 +62,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="dns-prefetch" href="https://images.unsplash.com">
+<link rel="dns-prefetch" href="https://forms.gle">
 <!-- Preload LCP hero poster — mobile-optimised (biggest LCP fix) -->
 <link rel="preload" as="image" href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp" imagesrcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp 480w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp 800w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=70&fm=webp 1400w" imagesizes="100vw" fetchpriority="high">
+<!-- Preload above-fold about image on desktop -->
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=700&q=85&fm=webp" media="(min-width:900px)" fetchpriority="low">
 <!-- Fonts: non-render-blocking via media swap trick -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"></noscript>
-<!-- Font Awesome: non-render-blocking -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+<!-- Font Awesome: load only used subsets (solid + brands) — non-render-blocking -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/solid.min.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css" media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/solid.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css">
+</noscript>
 
 <!-- ═══════════════════════════════════════
      JSON-LD STRUCTURED DATA
@@ -206,7 +218,7 @@
 /* scroll-behavior:smooth removed — handled by JS to avoid LCP/CLS penalty */
 body{background:var(--black);color:var(--white);font-family:var(--font-body);font-weight:300;line-height:1.65;overflow-x:hidden;cursor:default;}
 h1,h2,h3,h4{font-family:var(--font-head);font-weight:400;}
-a{text-decoration:none;color:inherit;transition:all .35s var(--ease);}
+a{text-decoration:none;color:inherit;transition:color .35s var(--ease),opacity .35s var(--ease);}
 img{max-width:100%;display:block;object-fit:cover;}
 ul{list-style:none;}
 ::-webkit-scrollbar{width:4px;}
@@ -561,7 +573,7 @@ ul{list-style:none;}
 .hero h1:hover em{color:var(--pure);}
 .hero-sub{font-size:1.08rem;color:var(--grey4);font-weight:300;margin-bottom:48px;max-width:480px;line-height:1.8;}
 .hero-btns{display:flex;gap:18px;flex-wrap:wrap;}
-.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;z-index:2;}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;z-index:2;background:none;border:none;padding:0;}
 .hero-scroll span{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--grey3);}
 .hero-scroll-line{width:1px;height:55px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2.5s ease infinite;position:relative;will-change:opacity;}
 .hero-scroll-line::after{content:'';position:absolute;bottom:0;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--gold);animation:scrollPulse 2.5s ease infinite;will-change:opacity;}
@@ -638,7 +650,7 @@ ul{list-style:none;}
 .about-img-wrap{position:relative;overflow:hidden;}
 .about-img-wrap::before{content:'';position:absolute;inset:0;border:1px solid var(--gold);transform:translate(16px,16px);transition:transform .5s var(--ease);z-index:0;pointer-events:none;opacity:.4;}
 .about-img-wrap:hover::before{transform:translate(20px,20px);}
-.about-img-wrap img{width:100%;height:620px;filter:grayscale(40%);transition:filter .8s ease,transform 1.2s var(--ease);position:relative;z-index:1;image-rendering:-webkit-optimize-contrast;}
+.about-img-wrap img{width:100%;height:620px;filter:grayscale(40%);transition:filter .8s ease,transform 1.2s var(--ease);position:relative;z-index:1;}
 .about-img-wrap:hover img{filter:grayscale(0%);transform:scale(1.03);}
 .badge-glass{position:absolute;bottom:-20px;right:-20px;padding:30px 36px;backdrop-filter:var(--glass-blur2);background:rgba(20,20,20,.75);border:1px solid var(--glass-border);display:flex;align-items:center;gap:20px;z-index:2;}
 .badge-glass .num{font-family:var(--font-head);font-size:3.6rem;line-height:1;color:var(--gold);}
@@ -736,6 +748,7 @@ ul{list-style:none;}
   cursor:pointer;background:#080808;
   /* ensure perfectly flush tiling */
   box-sizing:border-box;
+  touch-action:manipulation;
 }
 
 /* Image */
@@ -1010,10 +1023,8 @@ ul{list-style:none;}
   border-color:rgba(201,169,110,.3) !important;
 }
 
-/* ── Performance: containment & will-change ── */
+/* ── Performance: containment & will-change (applied on-hover via JS) ── */
 .cat-card{ contain:layout style; }
-.hero-video video{ will-change:transform; }
-.about-img-wrap img{ will-change:transform,filter; }
 .svc-card{ contain:layout style; }
 
 /* ── Preloader fade: GPU-composited ── */
@@ -1040,6 +1051,8 @@ body::after {
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   opacity:.022;mix-blend-mode:overlay;
+  will-change:transform;
+  transform:translateZ(0);
 }
 
 section::before { transition: opacity .6s ease; }
@@ -1102,10 +1115,10 @@ section::before { transition: opacity .6s ease; }
 ═══════════════════════════════════════════ */
 
 @media(min-width:1025px){
-  .cta-parallax img,
-  .stats-parallax-bg img { will-change:transform; }
+  /* will-change applied dynamically by JS only when parallax is active */
 }
 
+#about,
 #services,
 #portfolio,
 #journal,
@@ -1483,16 +1496,20 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   .gp-title{font-size:1.35rem;}
   .gp-lb-prev{left:10px;} .gp-lb-next{right:10px;}
 }
+<style>
+.skip-link{position:absolute;top:-100%;left:16px;z-index:10000;padding:10px 18px;background:var(--gold);color:var(--black);font-size:.85rem;letter-spacing:1px;font-weight:500;border-radius:0 0 4px 4px;transition:top .2s ease;}
+.skip-link:focus{top:0;}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 
 
 
 <!-- PRELOADER -->
 <div class="preloader" id="preloader">
-  <img src="logo.webp" alt="" class="pl-logo-img" id="plLogoImg"
+  <img src="logo.webp" alt="" class="pl-logo-img" id="plLogoImg" width="96" height="96" decoding="async"
        onerror="this.style.display='none';document.getElementById('plLogoText').style.display='flex';">
   <div class="pl-logo" id="plLogoText" style="display:none;">ARCH <em>X</em></div>
   <div class="pl-track"><div class="pl-bar"></div></div>
@@ -1502,7 +1519,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <header class="navbar" id="navbar" role="banner">
   <div class="container nav-wrap">
     <a href="/" class="logo" aria-label="Arch X Interior Studio — Home">
-      <img src="logo.webp" alt="" class="logo-img" aria-hidden="true">
+      <img src="logo.webp" alt="" class="logo-img" aria-hidden="true" width="44" height="44" decoding="async">
       ARCH <em>X</em>
     </a>
     <nav class="nav-links" id="navLinks" aria-label="Primary navigation">
@@ -1522,7 +1539,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 <!-- HERO with Video -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
   <div class="hero-video">
-    <video autoplay muted loop playsinline
+    <video autoplay muted loop playsinline preload="none"
       poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=60&fm=webp"
       aria-hidden="true" title="Arch X Interior Studio showcase video" width="1800" height="1012">
       <source src="hero-video.mp4" type="video/mp4">
@@ -1539,10 +1556,10 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
       <a href="https://forms.gle/zBrzXBXttt1UbFRQ8" target="_blank" rel="noopener noreferrer" class="btn btn-glass">Book Free Consultation</a>
     </div>
   </div>
-  <div class="hero-scroll" onclick="document.querySelector('#about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll down" role="button" tabindex="0">
+  <button class="hero-scroll" onclick="document.querySelector('#about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll down to About section" type="button">
     <span>Scroll</span>
     <div class="hero-scroll-line" aria-hidden="true"></div>
-  </div>
+  </button>
 </section>
 
 <!-- INSTAGRAM CTA STRIP -->
@@ -1814,6 +1831,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <span class="blog-tag">Living Room</span>
           <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&q=65&fm=webp"
                alt="Warm modern living room with oak shelving and layered lighting"
+               width="600" height="220"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
         </div>
@@ -1834,6 +1852,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <span class="blog-tag">Kitchen</span>
           <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=65&fm=webp"
                alt="Dark walnut kitchen with brass fittings and stone countertop"
+               width="600" height="220"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
         </div>
@@ -1854,6 +1873,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <span class="blog-tag">Design Thinking</span>
           <img src="https://images.unsplash.com/photo-1630699144867-37acec97df5a?w=600&q=65&fm=webp"
                alt="Bedroom with layered warm ambient lighting and linen textures"
+               width="600" height="220"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
         </div>
@@ -1874,6 +1894,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <span class="blog-tag">Balcony</span>
           <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=65&fm=webp"
                alt="Outdoor balcony with planters, teak flooring and rattan seating"
+               width="600" height="220"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
         </div>
@@ -1894,6 +1915,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <span class="blog-tag">Bedroom</span>
           <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=65&fm=webp"
                alt="Serene bedroom with taupe tones and textured wall panels"
+               width="600" height="220"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
         </div>
@@ -1914,6 +1936,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
           <span class="blog-tag">Dining</span>
           <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?w=600&q=65&fm=webp"
                alt="Intimate dining space with pendant lighting and oval table"
+               width="600" height="220"
                loading="lazy" decoding="async">
           <div class="blog-card-img-overlay"></div>
         </div>
@@ -1957,6 +1980,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
   <div class="cta-parallax" id="ctaParallax">
     <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=65&fm=webp"
          alt="Luxury interior design inspiration — Arch X Studio Bengaluru"
+         width="1200" height="800"
          loading="lazy" decoding="async" aria-hidden="true">
     <div class="cta-overlay" aria-hidden="true"></div>
   </div>
@@ -2083,7 +2107,7 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 (function(){
   const pl = document.getElementById('preloader');
   const startTime = Date.now();
-  const MIN_SHOW = 1800;
+  const MIN_SHOW = 400;
 
   function dismiss(){
     const elapsed = Date.now() - startTime;
@@ -2120,7 +2144,9 @@ navL.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
   hbg.setAttribute('aria-expanded','false');
 }));
 
-/* SMOOTH SCROLL + ACTIVE NAV */
+/* Defer non-critical initialisation until browser is idle */
+const idleInit = (typeof requestIdleCallback === 'function') ? requestIdleCallback : (cb) => setTimeout(cb, 1);/* SMOOTH SCROLL + ACTIVE NAV — deferred until idle */
+idleInit(()=>{
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     const t=document.querySelector(a.getAttribute('href'));
@@ -2142,13 +2168,14 @@ const sectionObs = new IntersectionObserver((entries)=>{
   });
 },{threshold:0.3, rootMargin:'-10% 0px -70% 0px'});
 sections.forEach(s=>sectionObs.observe(s));
+});
 
 /* PARALLAX — desktop only, getBoundingClientRect cached on load/resize to eliminate forced reflow */
 const pxItems=[
   {wrap:document.querySelector('.cta-parallax'),img:document.querySelector('#ctaParallax img'),speed:0.25},
 ];
 const isMobileDevice = () => window.innerWidth <= 1024 || navigator.maxTouchPoints > 0;
-let pxCache=[], pxTicking=false;
+let pxCache=[], pxTicking=false, pxScrollTimer=null;
 function cachePxRects(){
   pxCache=pxItems.map(({wrap,img,speed})=>({
     img, speed,
@@ -2172,8 +2199,17 @@ function applyParallax(){
 }
 if(!isMobileDevice()){
   cachePxRects();
+  // Apply will-change only during scroll, release after scroll ends
+  window.addEventListener('scroll',()=>{
+    pxItems.forEach(({img})=>{ if(img) img.style.willChange='transform'; });
+    clearTimeout(pxScrollTimer);
+    pxScrollTimer = setTimeout(()=>{
+      pxItems.forEach(({img})=>{ if(img) img.style.willChange='auto'; });
+    }, 200);
+    applyParallax();
+  },{passive:true});
   window.addEventListener('resize',cachePxRects,{passive:true});
-  window.addEventListener('scroll',applyParallax,{passive:true});
+  cachePxRects();
   applyParallax();
 }
 
@@ -2561,11 +2597,18 @@ trackWrap.addEventListener('touchmove', e => {
 },{passive:true});
 trackWrap.addEventListener('touchend', () => { velX=tVelX; momentum(); });
 
-/* Wheel */
+/* Wheel — throttled with RAF to avoid blocking compositor */
+let wheelTicking = false;
 trackWrap.addEventListener('wheel', e => {
   e.preventDefault();
-  dragX -= e.deltaY * 1.4;
-  clampAndApply();
+  if(!wheelTicking){
+    wheelTicking = true;
+    requestAnimationFrame(()=>{
+      dragX -= e.deltaY * 1.4;
+      clampAndApply();
+      wheelTicking = false;
+    });
+  }
 },{passive:false});
 
 /* ── Lightbox ── */
