@@ -61,13 +61,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<!-- ── DEVICE-SPECIFIC LCP PRELOADS ──────────────────────────────────
-     Each preload fires ONLY on its matching viewport.
-     Mobile (≤767px)  → 480w compressed poster
-     Tablet (768–1024) → 800w mid-quality poster
-     Desktop (≥1025px) → 1400w premium poster
-     No device downloads the other's asset.
-─────────────────────────────────────────────────────────────────── -->
+<!-- ══════════════════════════════════════════════════════════════════
+     POSTER-FIRST LCP STRATEGY
+     ONLY the poster image is preloaded. Video is NEVER preloaded.
+     The poster <img> IS the LCP element on both mobile and desktop.
+     Video src is injected via JS after first paint.
+     Three mutually-exclusive preloads — each device downloads exactly one.
+══════════════════════════════════════════════════════════════════ -->
 <link rel="preload" as="image"
   href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp&auto=format"
   media="(max-width: 767px)"
@@ -77,9 +77,10 @@
   media="(min-width: 768px) and (max-width: 1024px)"
   fetchpriority="high">
 <link rel="preload" as="image"
-  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=80&fm=webp&auto=format"
+  href="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=82&fm=webp&auto=format"
   media="(min-width: 1025px)"
   fetchpriority="high">
+<!-- No video preload — video src set lazily after LCP via JS -->
 <!-- Fonts: non-render-blocking via media swap trick -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"></noscript>
@@ -575,30 +576,52 @@ ul{list-style:none;}
 .hero{height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;}
 .hero-video{position:absolute;inset:0;z-index:0;}
 
-/* ── DEVICE-SPECIFIC HERO MEDIA ──────────────────────────────────────
-   Desktop (≥1025px): video visible, picture hidden
-   Mobile/Tablet (≤1024px): picture visible, video hidden + no download
-──────────────────────────────────────────────────────────────────── */
-.hero-picture { display:none; width:100%; height:100%; position:absolute; inset:0; }
-.hero-picture img { width:100%; height:100%; object-fit:cover; transform:scale(1.02); }
-.hero-vid { width:100%; height:100%; object-fit:cover; transform:scale(1.02); }
-
-/* Mobile/Tablet: show picture, suppress video rendering */
-@media(max-width:1024px){
-  .hero-picture { display:block; }
-  .hero-vid {
-    display:none;
-    /* Belt-and-suspenders: even if display:none doesn't stop download,
-       the JS below removes <source> before the video can fetch */
-  }
+/* ══════════════════════════════════════════════════════════════════
+   POSTER-FIRST LAYERING
+   ─────────────────────────────────────────────────────────────────
+   .hero-poster  z-index:1  always visible — this IS the LCP element
+   .hero-vid     z-index:2  starts opacity:0, fades in post-LCP
+                            once playing it sits above poster; poster
+                            stays behind as graceful fallback
+   ──────────────────────────────────────────────────────────────── */
+.hero-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;            /* always shown on ALL devices */
 }
-/* Desktop: show video, hide picture */
-@media(min-width:1025px){
-  .hero-picture { display:none !important; }
-  .hero-vid { display:block; }
+.hero-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);    /* match video scale exactly */
+  display: block;
 }
 
-/* ── END DEVICE-SPECIFIC HERO MEDIA ─────────────────────────────── */
+.hero-vid {
+  position: absolute;
+  inset: 0;
+  z-index: 2;                /* above poster */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  opacity: 0;                /* invisible until JS triggers fade-in */
+  transition: opacity 1.2s ease;  /* cinematic 1.2s cross-fade over poster */
+  display: block;            /* always in DOM; JS controls src injection */
+}
+
+/* Once JS adds .hero-vid--playing, the video fades in */
+.hero-vid.hero-vid--playing {
+  opacity: 1;
+}
+
+/* Once video is fully opaque, JS adds .hero-poster--hidden to save paint */
+.hero-poster.hero-poster--hidden {
+  visibility: hidden;        /* removes from paint, keeps layout */
+}
+
+/* ── END POSTER-FIRST LAYERING ─────────────────────────────────── */
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,6,6,.92) 0%,rgba(6,6,6,.65) 50%,rgba(6,6,6,.35) 100%);z-index:1;}
 .hero-vignette{position:absolute;inset:0;box-shadow:inset 0 0 200px rgba(0,0,0,.6);z-index:1;pointer-events:none;}
 .hero-content{position:relative;z-index:2;max-width:780px;}
@@ -1806,49 +1829,79 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 
 <main id="main-content">
 
-<!-- HERO with Device-Specific Media -->
+<!-- ══════════════════════════════════════════════════════════════
+     HERO — POSTER-FIRST CINEMATIC ARCHITECTURE
+     ──────────────────────────────────────────────────────────────
+     Layer order (z-index):
+       0 — .hero-poster  : <picture> — THIS IS THE LCP ELEMENT
+                           Immediately visible, preloaded, fetchpriority=high
+                           Always renders first on BOTH mobile and desktop
+
+       1 — .hero-vid     : <video>   — NO SRC AT PARSE TIME
+                           Desktop: src injected by JS ~300ms after LCP
+                           Mobile:  src never injected (poster is final render)
+                           Fades in over poster → seamless cinematic transition
+
+       2 — .hero-overlay / .hero-vignette
+       3 — .hero-content
+     ──────────────────────────────────────────────────────────────
+     Result: video NEVER competes with LCP on either device.
+     The poster image is the LCP. The video is a progressive enhancement.
+══════════════════════════════════════════════════════════════════ -->
 <section id="home" class="hero" aria-label="Hero — Luxury Interior Designers in Bengaluru">
   <div class="hero-video" id="heroMedia">
-    <!--
-      MOBILE/TABLET (≤1024px): Static picture — no video download, fast LCP.
-      DESKTOP (≥1025px):       Video with premium 1400w poster.
-      Switching is done in CSS: .hero-picture hidden on desktop, video hidden on mobile.
-    -->
 
-    <!-- Static hero image — shown on mobile/tablet, hidden on desktop -->
-    <picture class="hero-picture" aria-hidden="true">
-      <!-- Mobile portrait -->
+    <!-- ── LAYER 0: LCP POSTER IMAGE ─────────────────────────────
+         This is what Lighthouse measures as LCP on BOTH devices.
+         Preloaded in <head>. fetchpriority=high. Renders immediately.
+         Stays visible behind video until video is playing smoothly.
+    ──────────────────────────────────────────────────────────────── -->
+    <picture class="hero-poster" id="heroPoster" aria-hidden="true">
+      <!-- Mobile portrait ≤480px → 480w @q55 -->
       <source
         media="(max-width: 480px)"
         srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=480&q=55&fm=webp&auto=format"
         width="480" height="854">
-      <!-- Mobile landscape / small tablet -->
+      <!-- Mobile landscape / small tablet ≤767px → 768w @q60 -->
       <source
         media="(max-width: 767px)"
         srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=768&q=60&fm=webp&auto=format"
-        width="768" height="1080">
-      <!-- Tablet -->
+        width="768" height="432">
+      <!-- Tablet 768–1024px → 1024w @q65 -->
       <source
         media="(max-width: 1024px)"
         srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1024&q=65&fm=webp&auto=format"
-        width="1024" height="768">
-      <!-- Fallback (desktop — this source never fires on desktop because CSS hides .hero-picture there) -->
+        width="1024" height="576">
+      <!-- Desktop ≥1025px → 1400w @q82 premium quality -->
+      <source
+        media="(min-width: 1025px)"
+        srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=82&fm=webp&auto=format"
+        width="1400" height="787">
+      <!-- <img> fallback — also the element Lighthouse identifies as LCP -->
       <img
-        src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=768&q=60&fm=webp&auto=format"
+        id="heroPosterImg"
+        src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=82&fm=webp&auto=format"
         alt="Luxury interior design by Arch X Interior Studio, Bengaluru"
-        width="768" height="1080"
+        width="1400" height="787"
         fetchpriority="high"
-        decoding="async">
+        decoding="sync">
     </picture>
 
-    <!-- Video — shown on desktop only, hidden on mobile/tablet via CSS -->
-    <video class="hero-vid" autoplay muted loop playsinline
-      poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1400&q=80&fm=webp&auto=format"
-      aria-hidden="true" title="Arch X Interior Studio showcase video"
-      width="1800" height="1012"
-      fetchpriority="high">
-      <source src="hero-video.mp4" type="video/mp4">
+    <!-- ── LAYER 1: CINEMATIC VIDEO ───────────────────────────────
+         NO <source> and NO src at parse time.
+         Browser sees an empty <video> — zero network cost at load.
+         Desktop JS injects src after LCP is confirmed.
+         Mobile JS never touches this element.
+         opacity:0 initially → fades to 1 once playing → poster hides.
+    ──────────────────────────────────────────────────────────────── -->
+    <video class="hero-vid" id="heroVid"
+      muted loop playsinline autoplay
+      aria-hidden="true"
+      title="Arch X Interior Studio showcase video"
+      width="1800" height="1012">
+      <!-- src injected post-LCP by JS on desktop only -->
     </video>
+
   </div>
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="hero-vignette" aria-hidden="true"></div>
@@ -2415,40 +2468,117 @@ h1,h2,h3,h4 { font-family: var(--font-head), Georgia, serif; }
 </footer>
 
 <script>
-/* PRELOADER */
+/* ══════════════════════════════════════════════════════════════════
+   POSTER-FIRST VIDEO INITIALIZATION
+   ─────────────────────────────────────────────────────────────────
+   Architecture:
+   1. <video> has NO src at parse time → zero network cost at load
+   2. On DESKTOP only: after LCP fires (or 1200ms fallback), inject
+      the video src, then fade the video in over the poster
+   3. On MOBILE: video src is NEVER injected → poster is final render
+   4. Preloader timing is device-aware: mobile faster, desktop richer
+   ──────────────────────────────────────────────────────────────── */
 (function(){
-  /* ── Mobile video suppression: remove <source> BEFORE browser queues video download ── */
-  if(window.innerWidth <= 1024 || navigator.maxTouchPoints > 1){
-    var vid = document.querySelector('.hero-vid');
-    if(vid){
-      /* Remove all source elements */
-      var sources = vid.querySelectorAll('source');
-      sources.forEach(function(s){ s.parentNode.removeChild(s); });
-      /* Clear any src that may have been set */
-      vid.removeAttribute('src');
-      vid.load(); /* reset the media element — cancels pending fetch */
-    }
-  }
+  'use strict';
 
-  const pl = document.getElementById('preloader');
-  const startTime = Date.now();
-  const isMob = window.innerWidth <= 1024 || navigator.maxTouchPoints > 1;
-  const MIN_SHOW = isMob ? 600 : 800;
+  var IS_DESKTOP = window.innerWidth >= 1025 && navigator.maxTouchPoints <= 1;
+  var vid = document.getElementById('heroVid');
+  var poster = document.getElementById('heroPoster');
 
-  function dismiss(){
-    const elapsed = Date.now() - startTime;
-    const delay = Math.max(0, MIN_SHOW - elapsed);
+  /* ── PRELOADER timing ─────────────────────────────────────── */
+  var pl = document.getElementById('preloader');
+  var startTime = Date.now();
+  var MIN_SHOW = IS_DESKTOP ? 800 : 600;
+
+  function dismissPreloader(){
+    var elapsed = Date.now() - startTime;
+    var delay = Math.max(0, MIN_SHOW - elapsed);
     setTimeout(function(){
       pl.classList.add('done');
       setTimeout(function(){ if(pl && pl.parentNode) pl.remove(); }, 800);
     }, delay);
   }
-
   if(document.readyState === 'complete'){
-    dismiss();
+    dismissPreloader();
   } else {
-    window.addEventListener('load', dismiss, { once: true });
+    window.addEventListener('load', dismissPreloader, { once: true });
   }
+
+  /* ── DESKTOP: lazy-init video AFTER LCP ───────────────────── */
+  if(!IS_DESKTOP || !vid){ return; }
+
+  var videoSrc = 'hero-video.mp4';
+  var videoInitialized = false;
+
+  function initVideo(){
+    if(videoInitialized) return;
+    videoInitialized = true;
+
+    /* Inject source — browser begins fetch now, not at parse time */
+    var src = document.createElement('source');
+    src.src = videoSrc;
+    src.type = 'video/mp4';
+    vid.appendChild(src);
+    vid.load();
+
+    /* Once video can play through, fade it in over the poster */
+    function onCanPlay(){
+      vid.play().then(function(){
+        vid.classList.add('hero-vid--playing');   /* triggers CSS opacity:1 transition */
+        /* After the 1.2s fade completes, hide poster to save paint */
+        setTimeout(function(){
+          if(poster) poster.classList.add('hero-poster--hidden');
+        }, 1400);
+      }).catch(function(){
+        /* Autoplay blocked — keep poster visible, no visual degradation */
+      });
+    }
+
+    vid.addEventListener('canplaythrough', onCanPlay, { once: true });
+
+    /* Safety: if canplaythrough is slow (slow connection), try playing
+       after 3s regardless to give mobile-ish desktop a chance */
+    setTimeout(function(){
+      if(!vid.classList.contains('hero-vid--playing') && vid.readyState >= 3){
+        onCanPlay();
+      }
+    }, 3000);
+  }
+
+  /* ── TRIGGER: Use PerformanceObserver to detect LCP, then init ─
+     Fallback: requestIdleCallback or 1200ms timeout              */
+  var lcpFired = false;
+
+  function afterLCP(){
+    if(lcpFired) return;
+    lcpFired = true;
+    /* Small breathing room — let browser finish painting LCP first */
+    setTimeout(initVideo, 300);
+  }
+
+  if('PerformanceObserver' in window){
+    try {
+      var lcpObs = new PerformanceObserver(function(list){
+        /* LCP entry means the LCP element has painted */
+        if(list.getEntries().length > 0){
+          lcpObs.disconnect();
+          afterLCP();
+        }
+      });
+      lcpObs.observe({ type: 'largest-contentful-paint', buffered: true });
+    } catch(e){
+      /* PerformanceObserver unavailable — fall through to timeout */
+    }
+  }
+
+  /* Fallback A: requestIdleCallback — fires when browser is idle post-paint */
+  if('requestIdleCallback' in window){
+    requestIdleCallback(afterLCP, { timeout: 1500 });
+  }
+  /* Fallback B: hard 1200ms timeout — guarantees video starts even if
+     PerformanceObserver and rIC both fail or are delayed */
+  setTimeout(afterLCP, 1200);
+
 })();
 
 /* NAVBAR */
